@@ -3,6 +3,7 @@ using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using Application.Errors;
+using Application.Extensions;
 using Application.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -25,6 +26,15 @@ namespace Application.Services.Column.Commands.DeleteColumnCommand
             if (column == null)
             {
                 throw new RestException(HttpStatusCode.NotFound, new { Column = "Not found column" });
+            }
+
+            var columnsToUpdate = await _context
+                .GetColumns(b => b.Id == column.BoardId, c => c.Index > column.Index)
+                .ToListAsync(cancellationToken);
+
+            foreach (var col in columnsToUpdate)
+            {
+                col.Index--;
             }
 
             _context.Columns.Remove(column);

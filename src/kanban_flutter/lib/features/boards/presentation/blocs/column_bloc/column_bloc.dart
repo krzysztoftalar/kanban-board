@@ -12,17 +12,19 @@ part 'column_event.dart';
 
 part 'column_state.dart';
 
-typedef Future<Either<ServerException, bool>> _ColumnCommand();
+typedef Future<Either<ServerException, bool>> _ColumnRequest();
 
 class ColumnBloc extends Bloc<ColumnEvent, ColumnState> {
   final UpdateColumnIndex updateColumnIndex;
   final UpdateColumnTitle updateColumnTitle;
   final DeleteColumn deleteColumn;
+  final CreateColumn createColumn;
 
   ColumnBloc({
     @required this.updateColumnIndex,
     @required this.updateColumnTitle,
     @required this.deleteColumn,
+    @required this.createColumn,
   }) : super(ColumnInitial());
 
   @override
@@ -56,14 +58,25 @@ class ColumnBloc extends Bloc<ColumnEvent, ColumnState> {
         event,
         () => deleteColumn(DeleteColumnParams(columnId: event.columnId)),
       );
+    } else if (event is CreateColumnEvent) {
+      yield* _mapCardToState(
+        event,
+        () => createColumn(
+          CreateColumnParams(
+            boardId: event.boardId,
+            columnIndex: event.columnIndex,
+            title: event.title,
+          ),
+        ),
+      );
     }
   }
 
   Stream<ColumnState> _mapCardToState(
-      ColumnEvent event, _ColumnCommand _columnCommand) async* {
+      ColumnEvent event, _ColumnRequest _columnRequest) async* {
     yield ColumnLoading();
 
-    final cardEither = await _columnCommand();
+    final cardEither = await _columnRequest();
 
     yield cardEither.fold(
       (failure) => ColumnError(message: failure.message),

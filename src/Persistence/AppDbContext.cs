@@ -15,6 +15,8 @@ namespace Persistence
         public DbSet<Board> Boards { get; set; }
         public DbSet<Column> Columns { get; set; }
         public DbSet<Card> Cards { get; set; }
+        public DbSet<BoardTemplate> BoardTemplates { get; set; }
+        public DbSet<ColumnTemplate> ColumnTemplates { get; set; }
 
         public async Task<int> SaveChangesAsync()
         {

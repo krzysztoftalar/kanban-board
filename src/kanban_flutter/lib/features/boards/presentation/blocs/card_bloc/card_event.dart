@@ -44,9 +44,5 @@ class CreateCardEvent extends CardEvent {
   });
 
   @override
-  List<Object> get props => [
-        columnId,
-        cardIndex,
-        title,
-      ];
+  List<Object> get props => [columnId, cardIndex, title];
 }

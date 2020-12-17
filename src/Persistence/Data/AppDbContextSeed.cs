@@ -14,8 +14,135 @@ namespace Persistence.Data
             if (!isEmptyDatabse)
             {
                 await context.Boards.AddRangeAsync(GetPreconfiguredBoards());
+                // await context.BoardTemplates.AddRangeAsync(GetBoardTemplates());
                 await context.SaveChangesAsync();
             }
+        }
+
+        private static IEnumerable<BoardTemplate> GetBoardTemplates()
+        {
+            return new List<BoardTemplate>
+            {
+                new BoardTemplate
+                {
+                    Title = "Starter Kanban",
+                    ColumnTemplates = new List<ColumnTemplate>
+                    {
+                        new ColumnTemplate
+                        {
+                            Title = "To Do"
+                        },
+                        new ColumnTemplate
+                        {
+                            Title = "In Progress"
+                        },
+                        new ColumnTemplate
+                        {
+                            Title = "Done"
+                        },
+                    }
+                },
+                new BoardTemplate
+                {
+                    Title = "Weekly Tasks",
+                    ColumnTemplates = new List<ColumnTemplate>
+                    {
+                        new ColumnTemplate
+                        {
+                            Title = "Monday"
+                        },
+                        new ColumnTemplate
+                        {
+                            Title = "Tuesday"
+                        },
+                        new ColumnTemplate
+                        {
+                            Title = "Wednesday"
+                        },
+                        new ColumnTemplate
+                        {
+                            Title = "Thursday"
+                        },
+                        new ColumnTemplate
+                        {
+                            Title = "Friday"
+                        },
+                        new ColumnTemplate
+                        {
+                            Title = "Saturday"
+                        },
+                        new ColumnTemplate
+                        {
+                            Title = "Sunday"
+                        },
+                    }
+                },
+                new BoardTemplate
+                {
+                    Title = "Sprint/Release Cycle",
+                    ColumnTemplates = new List<ColumnTemplate>
+                    {
+                        new ColumnTemplate
+                        {
+                            Title = "Backlog"
+                        },
+                        new ColumnTemplate
+                        {
+                            Title = "In Progress"
+                        },
+                        new ColumnTemplate
+                        {
+                            Title = "Testing"
+                        },
+                        new ColumnTemplate
+                        {
+                            Title = "Done"
+                        },
+                    }
+                },
+                new BoardTemplate
+                {
+                    Title = "Product Roadmap",
+                    ColumnTemplates = new List<ColumnTemplate>
+                    {
+                        new ColumnTemplate
+                        {
+                            Title = "Q1"
+                        },
+                        new ColumnTemplate
+                        {
+                            Title = "Q2"
+                        },
+                        new ColumnTemplate
+                        {
+                            Title = "Q3"
+                        },
+                        new ColumnTemplate
+                        {
+                            Title = "Q4"
+                        },
+                    }
+                },
+                new BoardTemplate
+                {
+                    Title = "Product Backlog",
+                    ColumnTemplates = new List<ColumnTemplate>
+                    {
+                        new ColumnTemplate
+                        {
+                            Title = "Bugs"
+                        },
+                        new ColumnTemplate
+                        {
+                            Title = "Features"
+                        },
+                        new ColumnTemplate
+                        {
+                            Title = "Next Release"
+                        },
+                    }
+                },
+            };
         }
 
         private static IEnumerable<Board> GetPreconfiguredBoards()
@@ -25,6 +152,7 @@ namespace Persistence.Data
                 new Board
                 {
                     Title = "Trillo Shop",
+                    BoardTemplateId = 1,
                     Columns = new List<Column>
                     {
                         new Column

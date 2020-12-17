@@ -4,7 +4,19 @@ class ThemeColor {
   ThemeColor._();
 
   static const Color accent = Color.fromRGBO(23, 146, 135, 1);
+
   static const Color blue = Color.fromRGBO(4, 129, 158, .6);
+  static const Color light_blue = Color.fromRGBO(21, 160, 191, 1);
+  static const Color dark_blue = Color.fromRGBO(6, 105, 247, .5);
+  static const Color dark_blue2 = Color.fromRGBO(6, 105, 247, 1);
+
+  static const Color purple = Color.fromRGBO(197, 23, 182, .5);
+  static const Color purple2 = Color.fromRGBO(197, 23, 182, 1);
+  static const Color dark_purple = Color.fromRGBO(217, 1, 113, .5);
+  static const Color dark_purple2 = Color.fromRGBO(217, 1, 113, 1);
+
+  static const Color green = Color.fromRGBO(46, 206, 157, .5);
+  static const Color light_green = Color.fromRGBO(46, 206, 157, 1);
 
   // Border colors
   static const Color primary_border = Color.fromRGBO(4, 129, 158, 1);

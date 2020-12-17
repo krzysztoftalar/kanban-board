@@ -1,10 +1,7 @@
 part of 'board_bloc.dart';
 
-abstract class BoardState extends Equatable {
+abstract class BoardState {
   const BoardState();
-
-  @override
-  List<Object> get props => [];
 }
 
 class BoardInitial extends BoardState {}
@@ -17,9 +14,14 @@ class BoardLoaded extends BoardState {
   BoardLoaded({
     @required this.board,
   });
+}
 
-  @override
-  List<Object> get props => [board];
+class BoardCreated extends BoardState {
+  final int boardId;
+
+  BoardCreated({
+    @required this.boardId,
+  });
 }
 
 class BoardError extends BoardState {
@@ -28,7 +30,4 @@ class BoardError extends BoardState {
   BoardError({
     @required this.message,
   });
-
-  @override
-  List<Object> get props => [message];
 }

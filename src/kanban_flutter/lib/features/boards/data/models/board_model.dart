@@ -6,11 +6,13 @@ import 'column_item_model.dart';
 class BoardModel extends Board {
   final int id;
   final String title;
+  final int templateId;
   final List<ColumnItemModel> columns;
 
   BoardModel({
     @required this.id,
     @required this.title,
+    @required this.templateId,
     @required this.columns,
   });
 
@@ -18,6 +20,7 @@ class BoardModel extends Board {
     return BoardModel(
       id: json['id'],
       title: json['title'],
+      templateId: json['boardTemplateId'],
       columns: json['columns'] != null
           ? (json['columns'] as List)
               .map((x) => ColumnItemModel.fromJson(x))
@@ -25,4 +28,7 @@ class BoardModel extends Board {
           : [],
     );
   }
+
+  static BoardModel fromJsonModel(Map<String, dynamic> json) =>
+      BoardModel.fromJson(json);
 }

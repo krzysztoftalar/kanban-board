@@ -7,6 +7,8 @@ namespace Domain.Entities
         public int Id { get; set; }
         public string Title { get; set; }
 
+        public int BoardTemplateId { get; set; }
+        public virtual BoardTemplate BoardTemplate { get; set; }
         public virtual ICollection<Column> Columns { get; set; }
     }
 }

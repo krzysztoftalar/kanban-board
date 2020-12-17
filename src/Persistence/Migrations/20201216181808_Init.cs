@@ -7,7 +7,7 @@ namespace Persistence.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Boards",
+                name: "BoardTemplates",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -16,7 +16,47 @@ namespace Persistence.Migrations
                 },
                 constraints: table =>
                 {
+                    table.PrimaryKey("PK_BoardTemplates", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Boards",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Title = table.Column<string>(nullable: true),
+                    BoardTemplateId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
                     table.PrimaryKey("PK_Boards", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Boards_BoardTemplates_BoardTemplateId",
+                        column: x => x.BoardTemplateId,
+                        principalTable: "BoardTemplates",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ColumnTemplates",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Title = table.Column<string>(nullable: true),
+                    BoardTemplateId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ColumnTemplates", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ColumnTemplates_BoardTemplates_BoardTemplateId",
+                        column: x => x.BoardTemplateId,
+                        principalTable: "BoardTemplates",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -62,6 +102,11 @@ namespace Persistence.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_Boards_BoardTemplateId",
+                table: "Boards",
+                column: "BoardTemplateId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Cards_ColumnId",
                 table: "Cards",
                 column: "ColumnId");
@@ -70,6 +115,11 @@ namespace Persistence.Migrations
                 name: "IX_Columns_BoardId",
                 table: "Columns",
                 column: "BoardId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ColumnTemplates_BoardTemplateId",
+                table: "ColumnTemplates",
+                column: "BoardTemplateId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -78,10 +128,16 @@ namespace Persistence.Migrations
                 name: "Cards");
 
             migrationBuilder.DropTable(
+                name: "ColumnTemplates");
+
+            migrationBuilder.DropTable(
                 name: "Columns");
 
             migrationBuilder.DropTable(
                 name: "Boards");
+
+            migrationBuilder.DropTable(
+                name: "BoardTemplates");
         }
     }
 }

@@ -1,6 +1,8 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter/foundation.dart';
 
+import '../params/index.dart';
+import '../models/index.dart';
 import '../datasources/board_remote_data_source.dart';
 import '../../../../core/error/exceptions.dart';
 import '../../domain/entities/board.dart';
@@ -15,5 +17,23 @@ class BoardRepositoryImpl implements BoardRepository {
 
   Future<Either<ServerException, Board>> getBoardById(int id) async {
     return await remoteDataSource.getBoardById(id);
+  }
+
+  @override
+  Future<Either<ServerException, int>> createBoard(
+      CreateBoardParams params) async {
+    return await remoteDataSource.createBoard(params);
+  }
+
+  @override
+  Future<Either<ServerException, BoardsEnvelope>> getBoards(
+      GetBoardsParams params) async {
+    return await remoteDataSource.getBoards(params);
+  }
+
+  @override
+  Future<Either<ServerException, bool>> deleteBoard(
+      DeleteBoardParams params) async {
+    return await remoteDataSource.deleteBoard(params);
   }
 }

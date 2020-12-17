@@ -44,3 +44,18 @@ class DeleteColumnEvent extends ColumnEvent {
   @override
   List<Object> get props => [columnId];
 }
+
+class CreateColumnEvent extends ColumnEvent {
+  final int boardId;
+  final int columnIndex;
+  final String title;
+
+  CreateColumnEvent({
+    @required this.boardId,
+    @required this.columnIndex,
+    @required this.title,
+  });
+
+  @override
+  List<Object> get props => [boardId, columnIndex, title];
+}

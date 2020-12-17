@@ -9,7 +9,7 @@ using Persistence;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20201207101219_Init")]
+    [Migration("20201216181808_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -27,12 +27,32 @@ namespace Persistence.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int>("BoardTemplateId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Title")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("BoardTemplateId");
+
                     b.ToTable("Boards");
+                });
+
+            modelBuilder.Entity("Domain.Entities.BoardTemplate", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Title")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("BoardTemplates");
                 });
 
             modelBuilder.Entity("Domain.Entities.Card", b =>
@@ -81,6 +101,35 @@ namespace Persistence.Migrations
                     b.ToTable("Columns");
                 });
 
+            modelBuilder.Entity("Domain.Entities.ColumnTemplate", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("BoardTemplateId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BoardTemplateId");
+
+                    b.ToTable("ColumnTemplates");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Board", b =>
+                {
+                    b.HasOne("Domain.Entities.BoardTemplate", "BoardTemplate")
+                        .WithMany()
+                        .HasForeignKey("BoardTemplateId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Domain.Entities.Card", b =>
                 {
                     b.HasOne("Domain.Entities.Column", "Column")
@@ -95,6 +144,15 @@ namespace Persistence.Migrations
                     b.HasOne("Domain.Entities.Board", "Board")
                         .WithMany("Columns")
                         .HasForeignKey("BoardId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Domain.Entities.ColumnTemplate", b =>
+                {
+                    b.HasOne("Domain.Entities.BoardTemplate", "BoardTemplate")
+                        .WithMany("ColumnTemplates")
+                        .HasForeignKey("BoardTemplateId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

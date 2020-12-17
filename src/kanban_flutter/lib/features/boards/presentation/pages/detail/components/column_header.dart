@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:kanban_flutter/common/widgets/index.dart';
 
-import '../../../widgets/index.dart';
+import 'index.dart';
 import '../../../blocs/column_bloc/column_bloc.dart';
 import '../../../../domain/entities/column_item.dart';
 import '../../../../../../style/index.dart';
@@ -29,6 +30,17 @@ class _ColumnHeaderState extends State<ColumnHeader> {
   bool showConfirmDialog = false;
   final _formKey = GlobalKey<FormState>();
   final _columnFocusNode = FocusNode();
+
+  @override
+  void initState() {
+    super.initState();
+
+    _columnFocusNode.addListener(() {
+      if (!_columnFocusNode.hasFocus) {
+        setState(() => showForm = false);
+      }
+    });
+  }
 
   @override
   void dispose() {
@@ -73,27 +85,88 @@ class _ColumnHeaderState extends State<ColumnHeader> {
     }
   }
 
+  void _deleteColumn() {
+    _toggleConfirmDialog();
+    columnBloc.add(DeleteColumnEvent(columnId: widget.column.id));
+  }
+
   Widget _buildColumnTitleForm() {
-    return Form(
-      key: _formKey,
-      child: TextFormField(
-        onFieldSubmitted: (_) => _renameColumn(),
-        focusNode: _columnFocusNode,
-        initialValue: widget.column.title,
-        decoration: InputDecoration(
-          hintText: "Type a name for your column",
+    return Container(
+      padding: EdgeInsets.symmetric(
+        vertical: getProportionateWidth(10),
+      ),
+      child: Form(
+        key: _formKey,
+        child: TextFormField(
+          onFieldSubmitted: (_) => _renameColumn(),
+          focusNode: _columnFocusNode,
+          initialValue: widget.column.title,
+          decoration: InputDecoration(
+            hintText: "Type a name for your column",
+          ),
+          style: defaultTextStyle,
+          onSaved: (value) => newColumnTitle = value,
+          onChanged: (value) => setState(() => newColumnTitle = value),
+          validator: (value) {
+            if (value.isEmpty) {
+              return "Column title can't be empty.";
+            } else if (value.length > 100) {
+              return "Column title can't be over 100 characters.";
+            }
+            return null;
+          },
         ),
-        style: defaultTextStyle,
-        onSaved: (value) => newColumnTitle = value,
-        onChanged: (value) => setState(() => newColumnTitle = value),
-        validator: (value) {
-          if (value.isEmpty) {
-            return "Column title can't be empty.";
-          } else if (value.length > 100) {
-            return "Column title can't be over 100 characters.";
-          }
-          return null;
-        },
+      ),
+    );
+  }
+
+  Widget _buildPopupMenu() {
+    return PopupMenuButton<PopUpMenuOptions>(
+      onSelected: _menuChoiceAction,
+      offset: Offset(0, 15),
+      color: ThemeColor.menu_bg,
+      icon: Icon(
+        Icons.more_vert,
+        color: ThemeColor.text_normal,
+      ),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.circular(5)),
+      ),
+      itemBuilder: (_) => [
+        PopupMenuItem(
+          child: Text('Rename'),
+          textStyle: defaultTextStyle,
+          value: PopUpMenuOptions.Rename,
+        ),
+        PopupMenuItem(
+          child: Text('Delete'),
+          textStyle: defaultTextStyle,
+          value: PopUpMenuOptions.Delete,
+        ),
+      ],
+    );
+  }
+
+  Widget _buildConfirmDialogText() {
+    final cardsCount = widget.column.cards.length;
+
+    return Text(
+      "Are you sure you want to delete this column?\n"
+      "$cardsCount ${cardsCount == 1 ? 'card' : 'cards'} will also be deleted.",
+      style: TextStyle(
+        color: ThemeColor.text_selected,
+        fontSize: ThemeSize.fs_15,
+      ),
+    );
+  }
+
+  Widget _buildColumnTitle() {
+    return Text(
+      widget.column.title,
+      style: TextStyle(
+        fontSize: getProportionateWidth(ThemeSize.fs_20),
+        fontWeight: FontWeight.w500,
+        color: ThemeColor.text_selected,
       ),
     );
   }
@@ -103,8 +176,8 @@ class _ColumnHeaderState extends State<ColumnHeader> {
     return Expanded(
       child: Container(
         padding: EdgeInsets.symmetric(
-          vertical: getProportionateWidth(15),
-          horizontal: getProportionateWidth(13),
+          vertical: getProportionateWidth(5),
+          horizontal: getProportionateWidth(15),
         ),
         child: Column(
           children: [
@@ -112,98 +185,17 @@ class _ColumnHeaderState extends State<ColumnHeader> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Expanded(
-                  child: showForm
-                      ? _buildColumnTitleForm()
-                      : Text(
-                          widget.column.title,
-                          style: TextStyle(
-                            fontSize: getProportionateWidth(ThemeSize.fs_20),
-                            fontWeight: FontWeight.w500,
-                            color: ThemeColor.text_selected,
-                          ),
-                        ),
+                  child:
+                      showForm ? _buildColumnTitleForm() : _buildColumnTitle(),
                 ),
-                PopupMenuButton<PopUpMenuOptions>(
-                  onSelected: _menuChoiceAction,
-                  offset: Offset(0, 15),
-                  color: ThemeColor.menu_bg,
-                  icon: Icon(
-                    Icons.more_vert,
-                    color: ThemeColor.text_normal,
-                  ),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(
-                    Radius.circular(5),
-                  )),
-                  itemBuilder: (_) => [
-                    PopupMenuItem(
-                      child: Text('Rename'),
-                      textStyle: defaultTextStyle,
-                      value: PopUpMenuOptions.Rename,
-                    ),
-                    PopupMenuItem(
-                      child: Text('Delete'),
-                      textStyle: defaultTextStyle,
-                      value: PopUpMenuOptions.Delete,
-                    ),
-                  ],
-                )
+                _buildPopupMenu(),
               ],
             ),
             showConfirmDialog
-                ? Container(
-                    padding: EdgeInsets.symmetric(
-                      vertical: getProportionateHeight(10),
-                      horizontal: getProportionateWidth(15),
-                    ),
-                    decoration: BoxDecoration(color: ThemeColor.blue),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "Are you sure you want to delete this column?\n"
-                          "${widget.column.cards.length} ${widget.column.cards.length == 1 ? 'card' : 'cards'} will also be deleted.",
-                          style: TextStyle(
-                            color: ThemeColor.text_selected,
-                            fontSize: ThemeSize.fs_15,
-                          ),
-                        ),
-                        SizedBox(height: getProportionateWidth(10)),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            OutlinedDeleteButton(handler: _toggleConfirmDialog),
-                            SizedBox(width: 15),
-                            OutlinedButton(
-                              child: Text('Delete'),
-                              onPressed: () => columnBloc.add(DeleteColumnEvent(
-                                  columnId: widget.column.id)),
-                              style: ButtonStyle(
-                                backgroundColor:
-                                    MaterialStateProperty.resolveWith<Color>(
-                                  (states) {
-                                    if (states
-                                        .contains(MaterialState.pressed)) {
-                                      return ThemeColor.danger_press;
-                                    }
-                                    return ThemeColor.danger_press
-                                        .withOpacity(0.2);
-                                  },
-                                ),
-                                side: MaterialStateProperty.resolveWith<
-                                    BorderSide>((states) {
-                                  return BorderSide(
-                                      color: ThemeColor.danger_border);
-                                }),
-                                foregroundColor:
-                                    MaterialStateProperty.all<Color>(
-                                        ThemeColor.text_normal),
-                              ),
-                            ),
-                          ],
-                        )
-                      ],
-                    ),
+                ? ConfirmDeleteDialog(
+                    cancelHandler: _toggleConfirmDialog,
+                    deleteHandler: _deleteColumn,
+                    messageWidget: _buildConfirmDialogText,
                   )
                 : SizedBox.shrink(),
           ],

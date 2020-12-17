@@ -12,7 +12,7 @@ part 'card_event.dart';
 
 part 'card_state.dart';
 
-typedef Future<Either<ServerException, bool>> _CardCommand();
+typedef Future<Either<ServerException, bool>> _CardRequest();
 
 class CardBloc extends Bloc<CardEvent, CardState> {
   final UpdateCardIndex updateCardIndex;
@@ -56,10 +56,10 @@ class CardBloc extends Bloc<CardEvent, CardState> {
   }
 
   Stream<CardState> _mapCardToState(
-      CardEvent event, _CardCommand _cardCommand) async* {
+      CardEvent event, _CardRequest _cardRequest) async* {
     yield CardLoading();
 
-    final cardEither = await _cardCommand();
+    final cardEither = await _cardRequest();
 
     yield cardEither.fold(
       (failure) => CardError(message: failure.message),

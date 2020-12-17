@@ -6,11 +6,13 @@ import './column_item.dart';
 class Board extends Equatable {
   final int id;
   final String title;
+  final int templateId;
   final List<ColumnItem> columns;
 
   Board({
     @required this.id,
     @required this.title,
+    @required this.templateId,
     @required this.columns,
   });
 
@@ -18,10 +20,11 @@ class Board extends Equatable {
     return Board(
       id: id ?? this.id,
       title: title ?? this.title,
+      templateId: templateId ?? this.templateId,
       columns: columns ?? this.columns,
     );
   }
 
   @override
-  List<Object> get props => [id, title, columns];
+  List<Object> get props => [id, title, templateId, columns];
 }

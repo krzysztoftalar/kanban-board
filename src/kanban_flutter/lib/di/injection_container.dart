@@ -1,7 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 
-import '../features/boards/data/api/api_client.dart';
+import '../core/api/api_client.dart';
+import '../features/boards/data/datasources/index.dart';
 import '../features/boards/data/datasources/board_remote_data_source.dart';
 import '../features/boards/data/repositories/index.dart';
 import '../features/boards/domain/repositories/index.dart';
@@ -14,10 +15,16 @@ Future<void> init() async {
   //! Features - Boards
   // Blocs
   sl.registerFactory(
+    () => BoardsBloc(
+      getBoards: sl(),
+      deleteBoard: sl(),
+    ),
+  );
+
+  sl.registerFactory(
     () => BoardBloc(
       getBoardById: sl(),
-      updateColumnIndex: sl(),
-      updateCardIndex: sl(),
+      createBoard: sl(),
     ),
   );
 
@@ -26,6 +33,7 @@ Future<void> init() async {
       updateColumnIndex: sl(),
       updateColumnTitle: sl(),
       deleteColumn: sl(),
+      createColumn: sl(),
     ),
   );
 
@@ -36,15 +44,22 @@ Future<void> init() async {
     ),
   );
 
-  // Use cases
+  //! Use cases
+  // Board
+  sl.registerLazySingleton(() => GetBoards(repository: sl()));
   sl.registerLazySingleton(() => GetBoardById(repository: sl()));
+  sl.registerLazySingleton(() => CreateBoard(repository: sl()));
+  sl.registerLazySingleton(() => DeleteBoard(repository: sl()));
+  // Column
   sl.registerLazySingleton(() => UpdateColumnIndex(repository: sl()));
   sl.registerLazySingleton(() => UpdateColumnTitle(repository: sl()));
   sl.registerLazySingleton(() => DeleteColumn(repository: sl()));
+  sl.registerLazySingleton(() => CreateColumn(repository: sl()));
+  // Card
   sl.registerLazySingleton(() => UpdateCardIndex(repository: sl()));
   sl.registerLazySingleton(() => CreateCard(repository: sl()));
 
-  // Repositories
+  //! Repositories
   sl.registerLazySingleton<BoardRepository>(
       () => BoardRepositoryImpl(remoteDataSource: sl()));
   sl.registerLazySingleton<ColumnRepository>(
@@ -52,13 +67,17 @@ Future<void> init() async {
   sl.registerLazySingleton<CardRepository>(
       () => CardRepositoryImpl(remoteDataSource: sl()));
 
-  // Data sources
+  //! Data sources
   sl.registerLazySingleton<BoardRemoteDataSource>(
       () => BoardRemoteDataSourceImpl(client: sl()));
+  sl.registerLazySingleton<ColumnRemoteDataSource>(
+      () => ColumnRemoteDataSourceImpl(client: sl()));
+  sl.registerLazySingleton<CardRemoteDataSource>(
+      () => CardRemoteDataSourceImpl(client: sl()));
 
-  // Api
+  //! Api
   sl.registerLazySingleton(() => ApiClient(dio: sl()));
 
-  // External libraries
+  //! External libraries
   sl.registerLazySingleton(() => Dio(ApiClient.options));
 }

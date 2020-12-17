@@ -1,13 +1,13 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter/foundation.dart';
 
+import '../datasources/index.dart';
 import '../params/index.dart';
 import '../../domain/repositories/card_repository.dart';
 import '../../../../core/error/exceptions.dart';
-import '../datasources/board_remote_data_source.dart';
 
 class CardRepositoryImpl implements CardRepository {
-  final BoardRemoteDataSource remoteDataSource;
+  final CardRemoteDataSource remoteDataSource;
 
   CardRepositoryImpl({
     @required this.remoteDataSource,

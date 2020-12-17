@@ -29,6 +29,11 @@ namespace Application.Services.Column.Commands.UpdateColumnIndex
                 throw new RestException(HttpStatusCode.NotFound, new { Column = "Not found column" });
             }
 
+            var isColumnIndex = await _context.Columns
+                .AnyAsync(x => x.BoardId == request.BoardId && x.Index == request.NewIndex, cancellationToken);
+
+            if (!isColumnIndex) return Unit.Value;
+
             if (request.NewIndex > request.OldIndex)
             {
                 var columnsToUpdate = await _context

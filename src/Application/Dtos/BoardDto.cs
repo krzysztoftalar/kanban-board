@@ -10,6 +10,7 @@ namespace Application.Dtos
     {
         public int Id { get; set; }
         public string Title { get; set; }
+        public int BoardTemplateId { get; set; }
         public IEnumerable<ColumnDto> Columns { get; set; }
 
         public static readonly Expression<Func<Board, BoardDto>> Projection =
@@ -17,6 +18,7 @@ namespace Application.Dtos
             {
                 Id = board.Id,
                 Title = board.Title,
+                BoardTemplateId = board.BoardTemplateId,
                 Columns = board.Columns
                     .AsQueryable()
                     .Select(ColumnDto.Projection)

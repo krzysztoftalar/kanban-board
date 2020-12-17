@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../../../common/widgets/index.dart';
 import '../../../blocs/card_bloc/card_bloc.dart';
-import '../../../widgets/index.dart';
 import '../../../../domain/entities/column_item.dart';
 import '../../../../../../style/index.dart';
 
@@ -21,9 +21,20 @@ class _ColumnFooterState extends State<ColumnFooter> {
   CardBloc get cardBloc => BlocProvider.of<CardBloc>(context);
   TextEditingController _cardController = TextEditingController();
   bool showForm = false;
-  bool isTitleEmpty = false;
+  bool isTitleEmpty = true;
   final _formKey = GlobalKey<FormState>();
   final _cardFocusNode = FocusNode();
+
+  @override
+  void initState() {
+    super.initState();
+
+    _cardFocusNode.addListener(() {
+      if (!_cardFocusNode.hasFocus) {
+        setState(() => showForm = false);
+      }
+    });
+  }
 
   @override
   void dispose() {
@@ -61,9 +72,9 @@ class _ColumnFooterState extends State<ColumnFooter> {
       style: defaultTextStyle,
       onChanged: (value) {
         if (value.isEmpty) {
-          setState(() => isTitleEmpty = false);
-        } else if (value.isNotEmpty) {
           setState(() => isTitleEmpty = true);
+        } else if (value.isNotEmpty) {
+          setState(() => isTitleEmpty = false);
         }
       },
       validator: (value) {
@@ -77,37 +88,34 @@ class _ColumnFooterState extends State<ColumnFooter> {
     );
   }
 
+  Widget _buildAddCardBtn() {
+    return TextButton(
+      onPressed: () {
+        _toggleShowForm();
+        _cardFocusNode.requestFocus();
+      },
+      child: Text(
+        'Add a card',
+        style: TextStyle(
+          color: ThemeColor.link,
+          fontSize: ThemeSize.fs_17,
+          fontWeight: FontWeight.w400,
+        ),
+      ),
+    );
+  }
+
   Widget _buildButtonBar() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
-        OutlinedDeleteButton(handler: _toggleShowForm),
-        SizedBox(width: 15),
-        OutlinedButton(
-          child: Text('Add Card'),
-          onPressed: isTitleEmpty ? _createCard : null,
-          style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.resolveWith<Color>(
-              (states) {
-                if (states.contains(MaterialState.pressed)) {
-                  return ThemeColor.success_press;
-                } else if (!isTitleEmpty) {
-                  return ThemeColor.success_bg.withOpacity(0.2);
-                }
-                return ThemeColor.success_bg;
-              },
-            ),
-            side: MaterialStateProperty.resolveWith<BorderSide>((states) {
-              if (!isTitleEmpty) {
-                return BorderSide(
-                    color: ThemeColor.success_border.withOpacity(0.2));
-              }
-              return BorderSide(color: ThemeColor.success_border);
-            }),
-            foregroundColor:
-                MaterialStateProperty.all<Color>(ThemeColor.text_normal),
-          ),
-        ),
+        OutlinedCancelButton(handler: _toggleShowForm),
+        SizedBox(width: getProportionateHeight(15)),
+        OutlinedSuccessButton(
+          isFieldEmpty: isTitleEmpty,
+          btnText: 'Add Card',
+          handler: _createCard,
+        )
       ],
     );
   }
@@ -123,7 +131,7 @@ class _ColumnFooterState extends State<ColumnFooter> {
         child: Column(
           children: [
             _buildCardTitleFormField(),
-            SizedBox(height: 10),
+            SizedBox(height: getProportionateHeight(10)),
             _buildButtonBar(),
           ],
         ),
@@ -139,22 +147,7 @@ class _ColumnFooterState extends State<ColumnFooter> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          showForm
-              ? _buildForm()
-              : TextButton(
-                  onPressed: () {
-                    _toggleShowForm();
-                    _cardFocusNode.requestFocus();
-                  },
-                  child: Text(
-                    'Add a card',
-                    style: TextStyle(
-                      color: ThemeColor.link,
-                      fontSize: ThemeSize.fs_17,
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-                ),
+          showForm ? _buildForm() : _buildAddCardBtn(),
         ],
       ),
     );

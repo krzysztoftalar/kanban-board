@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-import '../../../../../style/index.dart';
+import '../../../style/index.dart';
 
-class OutlinedDeleteButton extends StatelessWidget {
+class OutlinedCancelButton extends StatelessWidget {
   final Function handler;
 
-  OutlinedDeleteButton({
+  OutlinedCancelButton({
     @required this.handler,
   });
 

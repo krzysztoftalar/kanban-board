@@ -6,6 +6,7 @@ import 'package:boardview/boardview_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../../common/widgets/index.dart';
 import 'components/index.dart';
 import '../../../../../style/index.dart';
 import '../../../../../core/error/failures.dart';
@@ -20,32 +21,44 @@ class BoardDetailPage extends StatefulWidget {
 
 class _BoardDetailPageState extends State<BoardDetailPage> {
   final BoardViewController _boardViewController = new BoardViewController();
+  bool _isInit = true;
   BoardBloc _boardBloc;
   ColumnBloc _columnBloc;
   CardBloc _cardBloc;
   StreamSubscription _columnSubscription;
   StreamSubscription _cardSubscription;
+  Board board;
 
   @override
   void initState() {
     super.initState();
-    // TODO replace boardId
-    _boardBloc = sl<BoardBloc>()
-      ..add(GetBoardByIdEvent(boardId: 1, setLoading: true));
+    _boardBloc = sl<BoardBloc>();
     _columnBloc = sl<ColumnBloc>();
     _cardBloc = sl<CardBloc>();
+  }
 
-    _columnSubscription = _columnBloc.listen((state) {
-      if (state is ColumnSuccess) {
-        _boardBloc.add(GetBoardByIdEvent(boardId: 1));
-      }
-    });
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
 
-    _cardSubscription = _cardBloc.listen((state) {
-      if (state is CardSuccess) {
-        _boardBloc.add(GetBoardByIdEvent(boardId: 1));
-      }
-    });
+    if (_isInit) {
+      final boardId = ModalRoute.of(context).settings.arguments as int;
+      _boardBloc.add(GetBoardByIdEvent(boardId: boardId, setLoading: true));
+
+      _columnSubscription = _columnBloc.listen((state) {
+        if (state is ColumnSuccess) {
+          _boardBloc.add(GetBoardByIdEvent(boardId: boardId));
+        }
+      });
+
+      _cardSubscription = _cardBloc.listen((state) {
+        if (state is CardSuccess) {
+          _boardBloc.add(GetBoardByIdEvent(boardId: boardId));
+        }
+      });
+
+      _isInit = false;
+    }
   }
 
   @override
@@ -58,7 +71,7 @@ class _BoardDetailPageState extends State<BoardDetailPage> {
     _cardSubscription.cancel();
   }
 
-  BoardItem _buildCard(CardItem card, int boardId) {
+  BoardItem _buildCard(CardItem card) {
     return BoardItem(
       onDropItem: (int newColumnIndex, int newCardIndex, int oldColumnIndex,
           int oldCardIndex, BoardItemState state) {
@@ -71,10 +84,21 @@ class _BoardDetailPageState extends State<BoardDetailPage> {
           oldColumnIndex: oldColumnIndex,
           newColumnIndex: newColumnIndex,
           cardId: card.id,
-          boardId: boardId,
+          boardId: board.id,
         ));
       },
       item: ColumnCardItem(card: card),
+    );
+  }
+
+  BoardList _createColumnForm() {
+    return BoardList(
+      draggable: false,
+      backgroundColor: ThemeColor.column_bg,
+      header: [
+        CreateColumnForm(board: board),
+      ],
+      items: [],
     );
   }
 
@@ -96,20 +120,25 @@ class _BoardDetailPageState extends State<BoardDetailPage> {
         ColumnHeader(column: column),
       ],
       footer: ColumnFooter(column: column),
-      items:
-          column.cards.map((card) => _buildCard(card, column.boardId)).toList(),
+      items: column.cards.map((card) => _buildCard(card)).toList(),
     );
   }
 
-  Widget _buildBoardDetailPage(Board board) {
-    return Padding(
-      padding: EdgeInsets.symmetric(
-        vertical: getProportionateWidth(15),
-        horizontal: getProportionateWidth(10),
-      ),
-      child: BoardView(
-        boardViewController: _boardViewController,
-        lists: board.columns.map((column) => _buildColumn(column)).toList(),
+  Widget _buildBoardDetailPage() {
+    final columns = board.columns.map((column) => _buildColumn(column)).toList()
+      ..add(_createColumnForm());
+
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
+      child: Padding(
+        padding: EdgeInsets.symmetric(
+          vertical: getProportionateWidth(15),
+          horizontal: getProportionateWidth(10),
+        ),
+        child: BoardView(
+          boardViewController: _boardViewController,
+          lists: columns,
+        ),
       ),
     );
   }
@@ -133,18 +162,26 @@ class _BoardDetailPageState extends State<BoardDetailPage> {
       child: Scaffold(
         backgroundColor: ThemeColor.board_bg,
         appBar: AppBar(
-          title: Text('Trillo Shop'),
+          title: BlocBuilder<BoardBloc, BoardState>(
+            builder: (_, state) {
+              if (state is BoardLoaded) {
+                return Text(state.board.title);
+              }
+              return SmallProgressIndicator();
+            },
+          ),
         ),
         body: BlocBuilder<BoardBloc, BoardState>(
           builder: (_, state) {
             if (state is BoardError) {
-              return Center(child: Text(state.message));
+              return ErrorMessage(message: state.message);
             } else if (state is BoardLoading) {
-              return Center(child: CircularProgressIndicator());
+              return BasicProgressIndicator();
             } else if (state is BoardLoaded) {
-              return _buildBoardDetailPage(state.board);
+              board = state.board;
+              return _buildBoardDetailPage();
             }
-            return Center(child: const Text(UNEXPECTED_FAILURE_MESSAGE));
+            return ErrorMessage(message: UNEXPECTED_FAILURE_MESSAGE);
           },
         ),
       ),

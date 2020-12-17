@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Application.Services.Column.Commands.CreateColumnCommand;
 using Application.Services.Column.Commands.DeleteColumnCommand;
 using Application.Services.Column.Commands.UpdateColumnIndex;
 using Application.Services.Column.Commands.UpdateColumnTitle;
@@ -17,6 +18,12 @@ namespace WebUI.Controllers
 
         [HttpPut("{id}")]
         public async Task<ActionResult<Unit>> UpdateColumnTitle([FromBody] UpdateColumnTitleCommand command)
+        {
+            return await Mediator.Send(command);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<Unit>> CreateColumn([FromBody] CreateColumnCommand command)
         {
             return await Mediator.Send(command);
         }

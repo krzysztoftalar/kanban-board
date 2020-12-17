@@ -11,4 +11,5 @@ abstract class ColumnRepository {
       UpdateColumnTitleParams params);
 
   Future<Either<ServerException, bool>> deleteColumn(DeleteColumnParams params);
+  Future<Either<ServerException, bool>> createColumn(CreateColumnParams params);
 }

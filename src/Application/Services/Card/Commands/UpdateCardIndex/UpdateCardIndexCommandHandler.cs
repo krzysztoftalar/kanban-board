@@ -27,6 +27,11 @@ namespace Application.Services.Card.Commands.UpdateCardIndex
             {
                 throw new RestException(HttpStatusCode.NotFound, new { Card = "Not found card" });
             }
+            
+            var isColumnIndex = await _context.Columns
+                .AnyAsync(x => x.BoardId == request.BoardId && x.Index == request.NewColumnIndex, cancellationToken);
+
+            if (!isColumnIndex) return Unit.Value;
 
             if (request.OldColumnIndex != request.NewColumnIndex)
             {
