@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 import '../../../blocs/index.dart';
-import '../../../options/board_options.dart';
+import '../../../data/board_templates.dart';
 import '../../../../../../style/index.dart';
 import 'index.dart';
 

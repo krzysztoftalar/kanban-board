@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../../../core/helpers/boards_validators.dart';
 import '../../../../../../common/widgets/index.dart';
 import '../../../blocs/card_bloc/card_bloc.dart';
 import '../../../../domain/entities/column_item.dart';
@@ -66,9 +67,7 @@ class _ColumnFooterState extends State<ColumnFooter> {
       controller: _cardController,
       focusNode: _cardFocusNode,
       onFieldSubmitted: (_) => _createCard(),
-      decoration: InputDecoration(
-        hintText: "Type a name for your card",
-      ),
+      decoration: InputDecoration(hintText: "Type a name for your card"),
       style: defaultTextStyle,
       onChanged: (value) {
         if (value.isEmpty) {
@@ -77,14 +76,7 @@ class _ColumnFooterState extends State<ColumnFooter> {
           setState(() => isTitleEmpty = false);
         }
       },
-      validator: (value) {
-        if (value.isEmpty) {
-          return "Card title can't be empty.";
-        } else if (value.length > 100) {
-          return "Card title can't be over 100 characters.";
-        }
-        return null;
-      },
+      validator: cardTitleValidator,
     );
   }
 

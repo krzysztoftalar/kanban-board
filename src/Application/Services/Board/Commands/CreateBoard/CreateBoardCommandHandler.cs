@@ -17,15 +17,20 @@ namespace Application.Services.Board.Commands.CreateBoard
     public class CreateBoardCommandHandler : IRequestHandler<CreateBoardCommand, int>
     {
         private readonly IAppDbContext _context;
+        private readonly IUserAccessor _userAccessor;
 
-        public CreateBoardCommandHandler(IAppDbContext context)
+        public CreateBoardCommandHandler(IAppDbContext context, IUserAccessor userAccessor)
         {
             _context = context;
+            _userAccessor = userAccessor;
         }
 
         public async Task<int> Handle(CreateBoardCommand request, CancellationToken cancellationToken)
         {
             BoardEntity board;
+
+            var user = await _context.Users
+                .FirstOrDefaultAsync(x => x.UserName == _userAccessor.GetCurrentUsername(), cancellationToken);
 
             if (request.TemplateId != 0)
             {
@@ -48,6 +53,7 @@ namespace Application.Services.Board.Commands.CreateBoard
 
                 board = new BoardEntity
                 {
+                    UserId = user.Id,
                     Title = request.Title,
                     BoardTemplateId = request.TemplateId,
                     Columns = columns
@@ -57,6 +63,7 @@ namespace Application.Services.Board.Commands.CreateBoard
             {
                 board = new BoardEntity
                 {
+                    UserId = user.Id,
                     Title = request.Title,
                     BoardTemplateId = 1,
                     Columns = new List<ColumnEntity>()

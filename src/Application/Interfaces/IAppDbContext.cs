@@ -7,6 +7,7 @@ namespace Application.Interfaces
 {
     public interface IAppDbContext
     {
+        DbSet<AppUser> Users { get; set; }
         DbSet<Board> Boards { get; set; }
         DbSet<Column> Columns { get; set; }
         DbSet<Card> Cards { get; set; }

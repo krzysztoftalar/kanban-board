@@ -21,13 +21,14 @@ class BoardDetailPage extends StatefulWidget {
 
 class _BoardDetailPageState extends State<BoardDetailPage> {
   final BoardViewController _boardViewController = new BoardViewController();
-  bool _isInit = true;
+
   BoardBloc _boardBloc;
   ColumnBloc _columnBloc;
   CardBloc _cardBloc;
   StreamSubscription _columnSubscription;
   StreamSubscription _cardSubscription;
   Board board;
+  bool _isInit = true;
 
   @override
   void initState() {

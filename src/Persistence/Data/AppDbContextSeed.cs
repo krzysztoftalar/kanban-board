@@ -1,22 +1,65 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Domain.Entities;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace Persistence.Data
 {
     public static class AppDbContextSeed
     {
-        public static async Task SeedData(AppDbContext context)
+        public static async Task SeedData(AppDbContext context, UserManager<AppUser> userManager)
         {
-            var isEmptyDatabse = await context.Boards.AnyAsync();
+            var isEmptyDatabse = await context.Users.AnyAsync();
 
             if (!isEmptyDatabse)
             {
-                await context.Boards.AddRangeAsync(GetPreconfiguredBoards());
+                foreach (var user in GetPreconfiguredUsers())
+                {
+                    await userManager.CreateAsync(user, "Pa$$w0rd");
+                }
+                await context.SaveChangesAsync();
+                
+                // await context.Boards.AddRangeAsync(GetPreconfiguredBoards());
                 // await context.BoardTemplates.AddRangeAsync(GetBoardTemplates());
                 await context.SaveChangesAsync();
             }
+        }
+        
+        
+        private static IEnumerable<AppUser> GetPreconfiguredUsers()
+        {
+            return new List<AppUser>
+            {
+                new AppUser
+                {
+                    Id = "a",
+                    UserName = "bob",
+                    Email = "bob@test.com",
+                    EmailConfirmed = true,
+                },
+                new AppUser
+                {
+                    Id = "b",
+                    UserName = "agata",
+                    Email = "agata@test.com",
+                    EmailConfirmed = true,
+                },
+                new AppUser
+                {
+                    Id = "c",
+                    UserName = "tom",
+                    Email = "tom@test.com",
+                    EmailConfirmed = true,
+                },
+                new AppUser
+                {
+                    Id = "d",
+                    UserName = "jack",
+                    Email = "jack@test.com",
+                    EmailConfirmed = true,
+                },
+            };
         }
 
         private static IEnumerable<BoardTemplate> GetBoardTemplates()

@@ -1,13 +1,12 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:kanban_flutter/common/widgets/index.dart';
-import 'package:kanban_flutter/core/error/failures.dart';
-import 'package:kanban_flutter/di/injection_container.dart';
-import 'package:kanban_flutter/features/boards/presentation/blocs/index.dart';
-import 'package:kanban_flutter/features/boards/presentation/pages/home/home_page.dart';
 import 'package:shimmer/shimmer.dart';
 
+import '../../core/routes/routes.dart';
+import '../../di/injection_container.dart';
+import '../../features/auth/presentation/blocs/user_bloc/user_bloc.dart';
 import '../../style/index.dart';
 
 class SplashPage extends StatefulWidget {
@@ -16,19 +15,67 @@ class SplashPage extends StatefulWidget {
 }
 
 class _SplashPageState extends State<SplashPage> {
-  BoardsBloc _boardsBloc;
+  UserBloc _userBloc;
+  StreamSubscription _userSubscription;
 
   @override
   void initState() {
     super.initState();
-    _boardsBloc = sl<BoardsBloc>();
-    _boardsBloc.add(GetBoardsEvent());
+    _userBloc = sl<UserBloc>()..add(CurrentUserEvent());
+
+    _userSubscription = _userBloc.listen((state) {
+      if (state is UserAuthenticated) {
+        Navigator.of(context).popAndPushNamed(Routes.HOME_PAGE);
+      } else if (state is UserError) {
+        Navigator.of(context).pushReplacementNamed(Routes.AUTH_PAGE);
+      }
+    });
   }
 
   @override
   void dispose() {
     super.dispose();
-    _boardsBloc.close();
+    _userBloc.close();
+    _userSubscription.cancel();
+  }
+
+  Widget _buildSplashPage() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.circular(10),
+            child: Container(
+              padding: EdgeInsets.symmetric(
+                vertical: getProportionateWidth(5),
+                horizontal: getProportionateWidth(15),
+              ),
+              color: ThemeColor.default_border,
+              child: FittedBox(
+                fit: BoxFit.fill,
+                child: FaIcon(
+                  FontAwesomeIcons.gitAlt,
+                  size: getProportionateWidth(80),
+                  color: ThemeColor.accent,
+                ),
+              ),
+            ),
+          ),
+          SizedBox(height: getProportionateHeight(20)),
+          Shimmer.fromColors(
+            baseColor: ThemeColor.accent,
+            highlightColor: ThemeColor.default_border,
+            child: Text(
+              'Git Boards',
+              style: TextStyle(
+                fontSize: getProportionateWidth(50),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -38,54 +85,8 @@ class _SplashPageState extends State<SplashPage> {
     return Scaffold(
       backgroundColor: ThemeColor.board_bg,
       body: BlocProvider(
-        create: (_) => _boardsBloc,
-        child: BlocBuilder<BoardsBloc, BoardsState>(
-          builder: (_, state) {
-            switch (state.status) {
-              case BoardsStatus.failure:
-                return ErrorMessage(message: GET_BOARDS_FAILURE_MASSAGE);
-              case BoardsStatus.success:
-                return HomePage();
-              default:
-                return Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(10),
-                        child: Container(
-                          padding: EdgeInsets.symmetric(
-                            vertical: getProportionateWidth(5),
-                            horizontal: getProportionateWidth(15),
-                          ),
-                          color: ThemeColor.default_border,
-                          child: FittedBox(
-                            fit: BoxFit.fill,
-                            child: FaIcon(
-                              FontAwesomeIcons.gitAlt,
-                              size: getProportionateWidth(80),
-                              color: ThemeColor.accent,
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: getProportionateHeight(20)),
-                      Shimmer.fromColors(
-                        baseColor: ThemeColor.accent,
-                        highlightColor: ThemeColor.default_border,
-                        child: Text(
-                          'Git Boards',
-                          style: TextStyle(
-                            fontSize: getProportionateWidth(50),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                );
-            }
-          },
-        ),
+        create: (_) => _userBloc,
+        child: _buildSplashPage(),
       ),
     );
   }

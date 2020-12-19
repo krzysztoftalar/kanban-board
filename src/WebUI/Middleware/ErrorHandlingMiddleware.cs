@@ -55,10 +55,7 @@ namespace WebUI.Middleware
 
             if (errors != null)
             {
-                var result = JsonSerializer.Serialize(new
-                {
-                    errors
-                });
+                var result = JsonSerializer.Serialize(errors);
 
                 await context.Response.WriteAsync(result);
             }

@@ -1,6 +1,11 @@
 using Application;
+using Application.Interfaces;
+using FluentValidation.AspNetCore;
+using Infrastructure;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -24,8 +29,17 @@ namespace WebUI
         {
             services.AddPersistence(_config);
             services.AddApplication();
+            services.AddInfrastructure();
+            
+            services.AddHttpContextAccessor();
 
-            services.AddSwaggerDocumentation();
+            services.AddControllers(options =>
+                {
+                    var policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
+                    options.Filters.Add(new AuthorizeFilter(policy));
+                })
+                .AddFluentValidation(options => { options.RegisterValidatorsFromAssemblyContaining<IAppDbContext>(); });
+
 
             services.AddCors(options =>
                 options.AddPolicy(CorsPolicy,
@@ -37,8 +51,9 @@ namespace WebUI
                             .AllowAnyHeader();
                     }
                 ));
-            
-            services.AddControllers();
+
+            services.AddSwaggerDocumentation();
+            services.AddJwtIdentity(_config.GetSection("JwtConfiguration"));
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -49,10 +64,12 @@ namespace WebUI
             }
 
             app.UseMiddleware<ErrorHandlingMiddleware>();
-            // app.UseHttpsRedirection();
 
             app.UseRouting();
             app.UseCors(CorsPolicy);
+
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseSwaggerDocumentation();
 

@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:kanban_flutter/common/pages/index.dart';
 import './di/injection_container.dart' as di;
 
+import 'features/auth/presentation/pages/auth/auth_page.dart';
+import 'common/pages/index.dart';
 import 'features/boards/presentation/pages/detail/board_detail_page.dart';
 import 'core/routes/routes.dart';
 import 'features/boards/presentation/pages/home/home_page.dart';
@@ -22,13 +23,18 @@ void main() async {
 }
 
 class KanbanApp extends StatelessWidget {
+  static final GlobalKey<NavigatorState> navigatorKey = new GlobalKey();
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: theme(),
-      home: HomePage(),
+      home: SplashPage(),
+      navigatorKey: navigatorKey,
       routes: {
+        Routes.AUTH_PAGE: (_) => AuthPage(),
+        Routes.HOME_PAGE: (_) => HomePage(),
         Routes.BOARD_DETAIL_PAGE: (_) => BoardDetailPage(),
       },
     );

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../../../core/helpers/boards_validators.dart';
 import '../../../blocs/board_bloc/board_bloc.dart';
 import '../../../../../../common/widgets/index.dart';
 import '../../../../../../style/index.dart';
@@ -55,9 +56,7 @@ class _CreateBoardFormState extends State<CreateBoardForm> {
       controller: _boardController,
       focusNode: _boardFocusNode,
       onFieldSubmitted: (_) => _createBoard(),
-      decoration: InputDecoration(
-        hintText: "Type a name for your board",
-      ),
+      decoration: InputDecoration(hintText: "Type a name for your board"),
       style: defaultTextStyle,
       onChanged: (value) {
         if (value.isEmpty) {
@@ -66,14 +65,7 @@ class _CreateBoardFormState extends State<CreateBoardForm> {
           setState(() => isTitleEmpty = false);
         }
       },
-      validator: (value) {
-        if (value.isEmpty) {
-          return "Board title can't be empty.";
-        } else if (value.length > 100) {
-          return "Board title can't be over 100 characters.";
-        }
-        return null;
-      },
+      validator: boardTitleValidator,
     );
   }
 

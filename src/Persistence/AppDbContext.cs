@@ -2,11 +2,12 @@
 using System.Threading.Tasks;
 using Application.Interfaces;
 using Domain.Entities;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace Persistence
 {
-    public class AppDbContext : DbContext, IAppDbContext
+    public class AppDbContext : IdentityDbContext<AppUser>, IAppDbContext
     {
         public AppDbContext(DbContextOptions options) : base(options)
         {
@@ -18,9 +19,9 @@ namespace Persistence
         public DbSet<BoardTemplate> BoardTemplates { get; set; }
         public DbSet<ColumnTemplate> ColumnTemplates { get; set; }
 
-        public async Task<int> SaveChangesAsync()
+        public async Task SaveChangesAsync()
         {
-            return await base.SaveChangesAsync();
+            await base.SaveChangesAsync();
         }
 
         protected override void OnModelCreating(ModelBuilder builder)

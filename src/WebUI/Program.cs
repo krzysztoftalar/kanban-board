@@ -7,6 +7,8 @@ using Persistence;
 using Persistence.Data;
 using System;
 using System.Threading.Tasks;
+using Domain.Entities;
+using Microsoft.AspNetCore.Identity;
 
 namespace WebUI
 {
@@ -33,9 +35,10 @@ namespace WebUI
             try
             {
                 var context = services.GetRequiredService<AppDbContext>();
+                var userManager = services.GetRequiredService<UserManager<AppUser>>();
 
                 await context.Database.MigrateAsync();
-                await AppDbContextSeed.SeedData(context);
+                await AppDbContextSeed.SeedData(context, userManager);
             }
             catch (Exception ex)
             {

@@ -9,6 +9,9 @@ namespace Domain.Entities
 
         public int BoardTemplateId { get; set; }
         public virtual BoardTemplate BoardTemplate { get; set; }
+
+        public string UserId { get; set; }
+        public virtual AppUser User { get; set; }
         public virtual ICollection<Column> Columns { get; set; }
     }
 }

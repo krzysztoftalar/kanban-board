@@ -1,4 +1,5 @@
 ﻿using Application.Interfaces;
+using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -16,6 +17,9 @@ namespace Persistence
             });
 
             services.AddScoped<IAppDbContext>(provider => provider.GetService<AppDbContext>());
+            
+            services.AddDefaultIdentity<AppUser>()
+                .AddEntityFrameworkStores<AppDbContext>();
 
             return services;
         }

@@ -5,7 +5,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../../blocs/boards_bloc/boards_bloc.dart';
 import '../../../../../../common/widgets/index.dart';
 import '../../../../../../core/routes/routes.dart';
-import '../../../options/board_options.dart';
+import '../../../data/board_templates.dart';
 import '../../../../../../style/index.dart';
 import '../../../../domain/entities/index.dart';
 

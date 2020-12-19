@@ -23,7 +23,7 @@ class _HomePageState extends State<HomePage> {
   StreamSubscription _boardSubscription;
   BoardBloc _boardBloc;
   BoardsBloc _boardsBloc;
-  int _selectedIndex = 1;
+  int _selectedIndex = 0;
 
   @override
   void initState() {

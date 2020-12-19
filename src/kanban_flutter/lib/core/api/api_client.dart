@@ -2,25 +2,53 @@ import 'dart:io';
 import 'package:dartz/dartz.dart';
 import 'package:dio/adapter.dart';
 import 'package:dio/dio.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:kanban_flutter/main.dart';
 
+import '../routes/routes.dart';
 import '../error/exceptions.dart';
 import '../config/app_config.dart';
 
 class ApiClient {
+  final FlutterSecureStorage storage;
   final Dio dio;
 
   ApiClient({
     @required this.dio,
+    @required this.storage,
   });
 
   Dio get httpClient {
-    (dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate =
-        (HttpClient client) {
-      client.badCertificateCallback =
-          (X509Certificate cert, String host, int port) => true;
-      return client;
-    };
+    if (config[ENVIRONMENT] == Environment.development) {
+      (dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate =
+          (HttpClient client) {
+        client.badCertificateCallback =
+            (X509Certificate cert, String host, int port) => true;
+        return client;
+      };
+    }
+
+    dio.interceptors.add(
+      InterceptorsWrapper(
+        onRequest: (RequestOptions options) async {
+          final token = await storage.read(key: JWT_KEY);
+          if (token != null) {
+            options.headers.addAll({"Authorization": "Bearer $token"});
+          }
+          return options;
+        },
+        onError: (DioError error) async {
+          if (error.response.statusCode == 401 &&
+              error.response.headers.map.containsKey('www-authenticate')) {
+            await storage.delete(key: JWT_KEY);
+            KanbanApp.navigatorKey.currentState
+                .pushReplacementNamed(Routes.AUTH_PAGE);
+          }
+        },
+      ),
+    );
+
     return dio;
   }
 
@@ -32,6 +60,17 @@ class ApiClient {
 typedef Future<Response<dynamic>> _ServerEndpoint();
 
 enum ApiResponseType { Object, Number, Unit }
+
+// RestException object thrown from server
+class Error {
+  final String message;
+
+  Error({this.message});
+
+  factory Error.fromJson(Map<String, dynamic> json) {
+    return Error(message: json['Error']);
+  }
+}
 
 Future<Either<ServerException, T>> getRemoteData<T>(
     _ServerEndpoint _serverEndpoint, ApiResponseType type,
@@ -51,7 +90,11 @@ Future<Either<ServerException, T>> getRemoteData<T>(
     }
 
     return null;
-  } catch (error) {
-    return Left(ServerException(error));
+  } on DioError catch (e) {
+    if (e.response.data != '') {
+      return Left(ServerException(Error.fromJson(e.response.data).message));
+    } else {
+      return Left(ServerException(e.response.statusMessage));
+    }
   }
 }

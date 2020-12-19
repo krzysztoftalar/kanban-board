@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:kanban_flutter/common/widgets/index.dart';
 
-import 'index.dart';
+import '../../../../../../common/widgets/index.dart';
 import '../../../blocs/column_bloc/column_bloc.dart';
 import '../../../../domain/entities/column_item.dart';
 import '../../../../../../style/index.dart';
