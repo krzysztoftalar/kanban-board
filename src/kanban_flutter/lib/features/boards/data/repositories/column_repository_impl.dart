@@ -1,10 +1,10 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter/foundation.dart';
 
-import '../datasources/index.dart';
-import '../params/index.dart';
 import '../../../../core/error/exceptions.dart';
 import '../../domain/repositories/column_repository.dart';
+import '../datasources/index.dart';
+import '../params/index.dart';
 
 class ColumnRepositoryImpl implements ColumnRepository {
   final ColumnRemoteDataSource remoteDataSource;

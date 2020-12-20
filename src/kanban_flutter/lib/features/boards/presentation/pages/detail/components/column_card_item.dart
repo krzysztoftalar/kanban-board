@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 
-import '../../../../domain/entities/index.dart';
 import '../../../../../../style/index.dart';
+import '../../../../domain/entities/index.dart';
 
+// TODO Add functionality, rebuild card ui
 class ColumnCardItem extends StatelessWidget {
   final CardItem card;
 
@@ -14,9 +15,9 @@ class ColumnCardItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.only(
-        bottom: getProportionateWidth(2),
-        left: getProportionateWidth(8),
-        right: getProportionateWidth(8),
+        bottom: getSize(2),
+        left: getSize(8),
+        right: getSize(8),
       ),
       child: Card(
         color: ThemeColor.card_bg,
@@ -28,7 +29,7 @@ class ColumnCardItem extends StatelessWidget {
                 card.title,
                 style: TextStyle(
                   height: 1.5,
-                  fontSize: getProportionateWidth(ThemeSize.fs_15),
+                  fontSize: getSize(ThemeSize.fs_15),
                   fontWeight: FontWeight.bold,
                 ),
               )

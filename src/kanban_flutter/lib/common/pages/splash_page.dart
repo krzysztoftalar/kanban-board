@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -48,28 +49,28 @@ class _SplashPageState extends State<SplashPage> {
             borderRadius: BorderRadius.circular(10),
             child: Container(
               padding: EdgeInsets.symmetric(
-                vertical: getProportionateWidth(5),
-                horizontal: getProportionateWidth(15),
+                vertical: getSize(5),
+                horizontal: getSize(15),
               ),
               color: ThemeColor.default_border,
               child: FittedBox(
                 fit: BoxFit.fill,
                 child: FaIcon(
                   FontAwesomeIcons.gitAlt,
-                  size: getProportionateWidth(80),
+                  size: getSize(80),
                   color: ThemeColor.accent,
                 ),
               ),
             ),
           ),
-          SizedBox(height: getProportionateHeight(20)),
+          SizedBox(height: getSize(20)),
           Shimmer.fromColors(
             baseColor: ThemeColor.accent,
             highlightColor: ThemeColor.default_border,
             child: Text(
               'Git Boards',
               style: TextStyle(
-                fontSize: getProportionateWidth(50),
+                fontSize: getSize(50),
               ),
             ),
           ),

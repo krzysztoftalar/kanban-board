@@ -1,10 +1,10 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter/foundation.dart';
 
+import '../../../../core/error/exceptions.dart';
 import '../../../../core/usecases/usecase.dart';
 import '../../data/params/index.dart';
 import '../repositories/index.dart';
-import '../../../../core/error/exceptions.dart';
 
 class UpdateColumnTitle extends UseCase<bool, UpdateColumnTitleParams> {
   final ColumnRepository repository;

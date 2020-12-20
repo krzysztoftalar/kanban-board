@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-import '../../../blocs/boards_bloc/boards_bloc.dart';
 import '../../../../../../common/widgets/index.dart';
 import '../../../../../../core/routes/routes.dart';
-import '../../../data/board_templates.dart';
 import '../../../../../../style/index.dart';
+import '../../../../data/repositories/board_templates_repository_impl.dart';
 import '../../../../domain/entities/index.dart';
+import '../../../blocs/boards_bloc/boards_bloc.dart';
 
 enum PopUpMenuOptions {
   Rename,
@@ -34,6 +34,7 @@ class _UserBoardItemState extends State<UserBoardItem> {
 
   void _menuChoiceAction(PopUpMenuOptions choice) {
     switch (choice) {
+      // TODO Add board rename functionality
       case PopUpMenuOptions.Rename:
         // _toggleShowForm();
         // _columnFocusNode.requestFocus();
@@ -52,7 +53,7 @@ class _UserBoardItemState extends State<UserBoardItem> {
   Widget _buildPopupMenu() {
     return PopupMenuButton<PopUpMenuOptions>(
       onSelected: _menuChoiceAction,
-      offset: Offset(0, 15),
+      offset: Offset(0, getSize(15)),
       color: ThemeColor.menu_bg,
       icon: Icon(
         Icons.more_vert,
@@ -81,17 +82,17 @@ class _UserBoardItemState extends State<UserBoardItem> {
       "Are you sure you want to delete \"${widget.board.title}\"?",
       style: TextStyle(
         color: ThemeColor.text_selected,
-        fontSize: ThemeSize.fs_15,
+        fontSize: getSize(ThemeSize.fs_15),
       ),
     );
   }
 
   Widget _buildIcon() {
-    final boardTemplate = getBoardTemplate(widget.board.templateId);
+    final boardTemplate = getBoardTemplateById(widget.board.templateId);
 
     return Container(
-      width: getProportionateWidth(25),
-      height: getProportionateWidth(25),
+      width: getSize(25),
+      height: getSize(25),
       child: FittedBox(
         fit: BoxFit.fill,
         child: FaIcon(
@@ -107,7 +108,7 @@ class _UserBoardItemState extends State<UserBoardItem> {
       widget.board.title,
       style: TextStyle(
         color: ThemeColor.text_selected,
-        fontSize: ThemeSize.fs_17,
+        fontSize: getSize(ThemeSize.fs_17),
       ),
     );
   }
@@ -139,7 +140,7 @@ class _UserBoardItemState extends State<UserBoardItem> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(bottom: getProportionateHeight(10)),
+      margin: EdgeInsets.only(bottom: getSize(10)),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(5),
         color: ThemeColor.card_bg,

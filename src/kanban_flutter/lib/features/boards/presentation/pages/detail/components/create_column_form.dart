@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:kanban_flutter/common/widgets/index.dart';
 
+import '../../../../../../common/widgets/index.dart';
+import '../../../../../../core/helpers/boards_validators.dart';
+import '../../../../../../style/index.dart';
 import '../../../../domain/entities/index.dart';
 import '../../../blocs/column_bloc/column_bloc.dart';
-import '../../../../../../style/index.dart';
 
 class CreateColumnForm extends StatefulWidget {
   final Board board;
@@ -22,6 +23,7 @@ class _CreateColumnFormState extends State<CreateColumnForm> {
   TextEditingController _columnController = TextEditingController();
   bool showForm = false;
   bool isTitleEmpty = true;
+
   final _formKey = GlobalKey<FormState>();
   final _columnFocusNode = FocusNode();
 
@@ -77,14 +79,7 @@ class _CreateColumnFormState extends State<CreateColumnForm> {
           setState(() => isTitleEmpty = false);
         }
       },
-      validator: (value) {
-        if (value.isEmpty) {
-          return "Column title can't be empty.";
-        } else if (value.length > 100) {
-          return "Column title can't be over 100 characters.";
-        }
-        return null;
-      },
+      validator: columnTitleValidator,
     );
   }
 
@@ -98,7 +93,7 @@ class _CreateColumnFormState extends State<CreateColumnForm> {
         'Add Column',
         style: TextStyle(
           color: ThemeColor.link,
-          fontSize: ThemeSize.fs_17,
+          fontSize: getSize(ThemeSize.fs_17),
           fontWeight: FontWeight.w400,
         ),
       ),
@@ -110,7 +105,7 @@ class _CreateColumnFormState extends State<CreateColumnForm> {
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
         OutlinedCancelButton(handler: _toggleShowForm),
-        SizedBox(width: getProportionateHeight(15)),
+        SizedBox(width: getSize(15)),
         OutlinedSuccessButton(
           isFieldEmpty: isTitleEmpty,
           btnText: 'Add Column',
@@ -123,15 +118,15 @@ class _CreateColumnFormState extends State<CreateColumnForm> {
   Widget _buildForm() {
     return Container(
       padding: EdgeInsets.symmetric(
-        horizontal: getProportionateWidth(5),
-        vertical: getProportionateWidth(15),
+        horizontal: getSize(5),
+        vertical: getSize(15),
       ),
       child: Form(
         key: _formKey,
         child: Column(
           children: [
             _buildColumnTitleFormField(),
-            SizedBox(height: getProportionateHeight(10)),
+            SizedBox(height: getSize(10)),
             _buildButtonBar(),
           ],
         ),
@@ -144,8 +139,8 @@ class _CreateColumnFormState extends State<CreateColumnForm> {
     return Expanded(
       child: Container(
         padding: EdgeInsets.symmetric(
-          vertical: getProportionateWidth(5),
-          horizontal: getProportionateWidth(7),
+          vertical: getSize(5),
+          horizontal: getSize(7),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

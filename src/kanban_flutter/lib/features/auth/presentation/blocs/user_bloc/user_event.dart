@@ -21,4 +21,3 @@ class LoginEvent extends UserEvent {
 }
 
 class CurrentUserEvent extends UserEvent {}
-

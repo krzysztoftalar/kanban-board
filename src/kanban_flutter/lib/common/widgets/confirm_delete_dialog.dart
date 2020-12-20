@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'index.dart';
 import '../../style/index.dart';
+import 'index.dart';
 
 class ConfirmDeleteDialog extends StatelessWidget {
   final Function deleteHandler;
@@ -39,18 +39,18 @@ class ConfirmDeleteDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(getProportionateWidth(15)),
+      padding: EdgeInsets.all(getSize(15)),
       decoration: BoxDecoration(color: ThemeColor.blue),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           messageWidget(),
-          SizedBox(height: getProportionateHeight(10)),
+          SizedBox(height: getSize(10)),
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               OutlinedCancelButton(handler: cancelHandler),
-              SizedBox(width: getProportionateHeight(15)),
+              SizedBox(width: getSize(15)),
               _buildDeleteButton(),
             ],
           )

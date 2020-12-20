@@ -1,14 +1,15 @@
 import 'dart:io';
+
 import 'package:dartz/dartz.dart';
 import 'package:dio/adapter.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:kanban_flutter/main.dart';
 
-import '../routes/routes.dart';
-import '../error/exceptions.dart';
+import '../../main.dart';
 import '../config/app_config.dart';
+import '../error/exceptions.dart';
+import '../routes/routes.dart';
 
 class ApiClient {
   final FlutterSecureStorage storage;

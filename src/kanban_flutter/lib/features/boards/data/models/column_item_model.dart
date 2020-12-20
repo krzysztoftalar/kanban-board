@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 
-import '../../domain/entities/column_item.dart';
 import './card_item_model.dart';
+import '../../domain/entities/column_item.dart';
 
 class ColumnItemModel extends ColumnItem {
   final int id;

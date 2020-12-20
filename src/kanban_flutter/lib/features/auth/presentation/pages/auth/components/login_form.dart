@@ -3,8 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../../common/widgets/index.dart';
 import '../../../../../../core/helpers/login_validators.dart';
-import '../../../blocs/user_bloc/user_bloc.dart';
 import '../../../../../../style/index.dart';
+import '../../../blocs/user_bloc/user_bloc.dart';
 
 class LoginForm extends StatefulWidget {
   @override
@@ -82,7 +82,7 @@ class _LoginFormState extends State<LoginForm> {
       margin: EdgeInsets.only(
         top: MediaQuery.of(context).padding.top,
       ),
-      padding: EdgeInsets.symmetric(vertical: getProportionateWidth(20)),
+      padding: EdgeInsets.symmetric(vertical: getSize(20)),
       color: ThemeColor.card_bg,
       width: double.infinity,
       child: Center(
@@ -90,7 +90,7 @@ class _LoginFormState extends State<LoginForm> {
           'Log In',
           style: TextStyle(
             color: ThemeColor.text_selected,
-            fontSize: ThemeSize.fs_20,
+            fontSize: getSize(ThemeSize.fs_20),
           ),
         ),
       ),
@@ -102,17 +102,17 @@ class _LoginFormState extends State<LoginForm> {
       builder: (_, state) {
         if (state is UserError) {
           return Container(
-            padding: EdgeInsets.all(getProportionateWidth(15)),
+            padding: EdgeInsets.all(getSize(15)),
             child: Text(
               state.message,
               style: TextStyle(
                 color: ThemeColor.text_error,
-                fontSize: ThemeSize.fs_15,
+                fontSize: getSize(ThemeSize.fs_15),
               ),
             ),
           );
         }
-        return SizedBox(height: getProportionateWidth(20));
+        return SizedBox(height: getSize(20));
       },
     );
   }
@@ -142,7 +142,7 @@ class _LoginFormState extends State<LoginForm> {
           _buildServerMessage(),
           Container(
             padding: EdgeInsets.symmetric(
-              horizontal: getProportionateWidth(15),
+              horizontal: getSize(15),
             ),
             child: Form(
               key: _formKey,
@@ -150,9 +150,9 @@ class _LoginFormState extends State<LoginForm> {
                 child: Column(
                   children: [
                     _buildEmailFormField(),
-                    SizedBox(height: getProportionateWidth(20)),
+                    SizedBox(height: getSize(20)),
                     _buildPasswordFormField(),
-                    SizedBox(height: getProportionateWidth(20)),
+                    SizedBox(height: getSize(20)),
                     _buildSubmitBtn(),
                   ],
                 ),

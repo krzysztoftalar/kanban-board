@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
-import '../../../blocs/index.dart';
-import '../../../data/board_templates.dart';
 import '../../../../../../style/index.dart';
+import '../../../../data/repositories/board_templates_repository_impl.dart';
+import '../../../blocs/index.dart';
 import 'index.dart';
 
 class BoardTemplates extends StatelessWidget {
@@ -18,7 +18,7 @@ class BoardTemplates extends StatelessWidget {
         ),
       ),
       child: Container(
-        padding: EdgeInsets.all(getProportionateWidth(20)),
+        padding: EdgeInsets.all(getSize(20)),
         decoration: BoxDecoration(
           border: Border.all(color: ThemeColor.primary_border),
           borderRadius: BorderRadius.circular(5),
@@ -29,7 +29,7 @@ class BoardTemplates extends StatelessWidget {
             'Create a new board',
             style: TextStyle(
               color: ThemeColor.text_selected,
-              fontSize: ThemeSize.fs_17,
+              fontSize: getSize(ThemeSize.fs_17),
               fontWeight: FontWeight.w600,
             ),
           ),
@@ -44,17 +44,17 @@ class BoardTemplates extends StatelessWidget {
       scrollDirection: Axis.vertical,
       children: [
         _buildNewBoard(context),
-        SizedBox(height: getProportionateHeight(20)),
+        SizedBox(height: getSize(20)),
         Center(
           child: Text(
             '...or create a board from a template.',
             style: TextStyle(
               color: ThemeColor.text_normal,
-              fontSize: ThemeSize.fs_17,
+              fontSize: getSize(ThemeSize.fs_17),
             ),
           ),
         ),
-        SizedBox(height: getProportionateHeight(20)),
+        SizedBox(height: getSize(20)),
         ...BOARD_TEMPLATES
             .map((board) => BoardTemplateItem(board: board))
             .toList(),

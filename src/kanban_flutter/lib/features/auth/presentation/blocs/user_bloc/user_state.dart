@@ -28,6 +28,7 @@ class UserError extends UserState {
   UserError({
     @required this.message,
   });
+
   @override
   List<Object> get props => [message];
 }

@@ -24,11 +24,7 @@
 <br/>
 
 <p align="center">
-  <img src="./flutter_app/assets/images/movie-1.png" width="40%" alt="Project">
-</p>
-
-<p align="center">
-  <img src="./flutter_app/assets/images/movie-2.png" width="40%" alt="Project">
+  <img src="./src/kanban_flutter/assets/images/kanban-1.png" width="100%" alt="Project">
 </p>
 
 ## Features

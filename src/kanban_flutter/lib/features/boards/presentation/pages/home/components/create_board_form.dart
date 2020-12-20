@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../../../core/helpers/boards_validators.dart';
-import '../../../blocs/board_bloc/board_bloc.dart';
 import '../../../../../../common/widgets/index.dart';
+import '../../../../../../core/helpers/boards_validators.dart';
 import '../../../../../../style/index.dart';
+import '../../../blocs/board_bloc/board_bloc.dart';
 
 class CreateBoardForm extends StatefulWidget {
   final int templateId;
@@ -22,6 +22,7 @@ class _CreateBoardFormState extends State<CreateBoardForm> {
   BoardBloc get boardBloc => BlocProvider.of<BoardBloc>(context);
   TextEditingController _boardController = TextEditingController();
   bool isTitleEmpty = true;
+
   final _formKey = GlobalKey<FormState>();
   final _boardFocusNode = FocusNode();
 
@@ -76,8 +77,8 @@ class _CreateBoardFormState extends State<CreateBoardForm> {
         onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
         child: Container(
           padding: EdgeInsets.symmetric(
-            vertical: getProportionateWidth(15),
-            horizontal: getProportionateWidth(15),
+            vertical: getSize(15),
+            horizontal: getSize(15),
           ),
           color: ThemeColor.menu_bg,
           child: Form(
@@ -90,21 +91,21 @@ class _CreateBoardFormState extends State<CreateBoardForm> {
                     'Create Board',
                     style: TextStyle(
                       color: ThemeColor.text_selected,
-                      fontSize: ThemeSize.fs_20,
+                      fontSize: getSize(ThemeSize.fs_20),
                     ),
                   ),
                 ),
-                SizedBox(height: getProportionateHeight(15)),
+                SizedBox(height: getSize(15)),
                 Text(
                   'Board Name',
                   style: TextStyle(
                     color: ThemeColor.text_normal,
-                    fontSize: ThemeSize.fs_17,
+                    fontSize: getSize(ThemeSize.fs_17),
                   ),
                 ),
-                SizedBox(height: getProportionateHeight(5)),
+                SizedBox(height: getSize(5)),
                 _buildBoardTitleFormField(),
-                SizedBox(height: getProportionateHeight(10)),
+                SizedBox(height: getSize(10)),
                 Container(
                   alignment: Alignment.topRight,
                   child: OutlinedSuccessButton(

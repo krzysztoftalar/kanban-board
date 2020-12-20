@@ -1,21 +1,23 @@
 import 'package:flutter/material.dart';
 
 class SizeConfig {
-  static MediaQueryData _mediaQueryData;
+  static MediaQueryData mediaQueryData;
   static double screenWidth;
   static double screenHeight;
+  static bool isLandscape;
 
   void init(BuildContext context) {
-    _mediaQueryData = MediaQuery.of(context);
-    screenWidth = _mediaQueryData.size.width;
-    screenHeight = _mediaQueryData.size.height;
+    mediaQueryData = MediaQuery.of(context);
+    screenWidth = mediaQueryData.size.width;
+    screenHeight = mediaQueryData.size.height;
+    isLandscape = mediaQueryData.orientation == Orientation.landscape;
   }
 }
 
-// 683 is the layout height that designer use
-double getProportionateHeight(double inputHeight) =>
-    (inputHeight / 683) * SizeConfig.screenHeight;
-
 // 411 is the layout width that designer use
-double getProportionateWidth(double inputWidth) =>
-    (inputWidth / 411) * SizeConfig.screenWidth;
+double getSize(double inputSize) {
+  if (SizeConfig.isLandscape) {
+    return (inputSize / 411) * SizeConfig.screenHeight;
+  }
+  return (inputSize / 411) * SizeConfig.screenWidth;
+}

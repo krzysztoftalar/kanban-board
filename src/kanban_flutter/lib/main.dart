@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import './di/injection_container.dart' as di;
 
+import './di/injection_container.dart' as di;
 import 'features/auth/presentation/pages/auth/auth_page.dart';
 import 'common/pages/index.dart';
 import 'features/boards/presentation/pages/detail/board_detail_page.dart';

@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:boardview/board_item.dart';
 import 'package:boardview/board_list.dart';
 import 'package:boardview/boardview.dart';
@@ -7,12 +8,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../common/widgets/index.dart';
-import 'components/index.dart';
-import '../../../../../style/index.dart';
 import '../../../../../core/error/failures.dart';
 import '../../../../../di/injection_container.dart';
+import '../../../../../style/index.dart';
 import '../../../domain/entities/index.dart';
 import '../../blocs/index.dart';
+import 'components/index.dart';
 
 class BoardDetailPage extends StatefulWidget {
   @override
@@ -71,6 +72,22 @@ class _BoardDetailPageState extends State<BoardDetailPage> {
     _columnSubscription.cancel();
     _cardSubscription.cancel();
   }
+
+  double get calcPageHeight =>
+      SizeConfig.screenHeight -
+      SizeConfig.mediaQueryData.padding.top -
+      appBar.preferredSize.height;
+
+  final PreferredSizeWidget appBar = AppBar(
+    title: BlocBuilder<BoardBloc, BoardState>(
+      builder: (_, state) {
+        if (state is BoardLoaded) {
+          return Text(state.board.title);
+        }
+        return SmallProgressIndicator();
+      },
+    ),
+  );
 
   BoardItem _buildCard(CardItem card) {
     return BoardItem(
@@ -131,14 +148,17 @@ class _BoardDetailPageState extends State<BoardDetailPage> {
 
     return GestureDetector(
       onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
-      child: Padding(
-        padding: EdgeInsets.symmetric(
-          vertical: getProportionateWidth(15),
-          horizontal: getProportionateWidth(10),
-        ),
-        child: BoardView(
-          boardViewController: _boardViewController,
-          lists: columns,
+      child: SingleChildScrollView(
+        child: Container(
+          height: calcPageHeight,
+          padding: EdgeInsets.symmetric(
+            vertical: getSize(15),
+            horizontal: getSize(10),
+          ),
+          child: BoardView(
+            boardViewController: _boardViewController,
+            lists: columns,
+          ),
         ),
       ),
     );
@@ -162,16 +182,7 @@ class _BoardDetailPageState extends State<BoardDetailPage> {
       ],
       child: Scaffold(
         backgroundColor: ThemeColor.board_bg,
-        appBar: AppBar(
-          title: BlocBuilder<BoardBloc, BoardState>(
-            builder: (_, state) {
-              if (state is BoardLoaded) {
-                return Text(state.board.title);
-              }
-              return SmallProgressIndicator();
-            },
-          ),
-        ),
+        appBar: appBar,
         body: BlocBuilder<BoardBloc, BoardState>(
           builder: (_, state) {
             if (state is BoardError) {

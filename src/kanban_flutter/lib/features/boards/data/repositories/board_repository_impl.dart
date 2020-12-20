@@ -1,12 +1,12 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter/foundation.dart';
 
-import '../params/index.dart';
-import '../models/index.dart';
-import '../datasources/board_remote_data_source.dart';
 import '../../../../core/error/exceptions.dart';
 import '../../domain/entities/board.dart';
 import '../../domain/repositories/board_repository.dart';
+import '../datasources/board_remote_data_source.dart';
+import '../models/index.dart';
+import '../params/index.dart';
 
 class BoardRepositoryImpl implements BoardRepository {
   final BoardRemoteDataSource remoteDataSource;

@@ -7,6 +7,15 @@ String boardTitleValidator(String title) {
   return null;
 }
 
+String columnTitleValidator(String title) {
+  if (title.isEmpty) {
+    return "Column title can't be empty.";
+  } else if (title.length > 100) {
+    return "Column title can't be over 100 characters.";
+  }
+  return null;
+}
+
 String cardTitleValidator(String title) {
   if (title.isEmpty) {
     return "Card title can't be empty.";

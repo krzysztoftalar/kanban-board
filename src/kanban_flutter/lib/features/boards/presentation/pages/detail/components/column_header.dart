@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../../common/widgets/index.dart';
-import '../../../blocs/column_bloc/column_bloc.dart';
-import '../../../../domain/entities/column_item.dart';
+import '../../../../../../core/helpers/boards_validators.dart';
 import '../../../../../../style/index.dart';
+import '../../../../domain/entities/column_item.dart';
+import '../../../blocs/column_bloc/column_bloc.dart';
 
 enum PopUpMenuOptions {
   Rename,
@@ -27,6 +28,7 @@ class _ColumnHeaderState extends State<ColumnHeader> {
   String newColumnTitle;
   bool showForm = false;
   bool showConfirmDialog = false;
+
   final _formKey = GlobalKey<FormState>();
   final _columnFocusNode = FocusNode();
 
@@ -92,7 +94,7 @@ class _ColumnHeaderState extends State<ColumnHeader> {
   Widget _buildColumnTitleForm() {
     return Container(
       padding: EdgeInsets.symmetric(
-        vertical: getProportionateWidth(10),
+        vertical: getSize(10),
       ),
       child: Form(
         key: _formKey,
@@ -106,14 +108,7 @@ class _ColumnHeaderState extends State<ColumnHeader> {
           style: defaultTextStyle,
           onSaved: (value) => newColumnTitle = value,
           onChanged: (value) => setState(() => newColumnTitle = value),
-          validator: (value) {
-            if (value.isEmpty) {
-              return "Column title can't be empty.";
-            } else if (value.length > 100) {
-              return "Column title can't be over 100 characters.";
-            }
-            return null;
-          },
+          validator: columnTitleValidator,
         ),
       ),
     );
@@ -122,7 +117,7 @@ class _ColumnHeaderState extends State<ColumnHeader> {
   Widget _buildPopupMenu() {
     return PopupMenuButton<PopUpMenuOptions>(
       onSelected: _menuChoiceAction,
-      offset: Offset(0, 15),
+      offset: Offset(0, getSize(15)),
       color: ThemeColor.menu_bg,
       icon: Icon(
         Icons.more_vert,
@@ -154,7 +149,7 @@ class _ColumnHeaderState extends State<ColumnHeader> {
       "$cardsCount ${cardsCount == 1 ? 'card' : 'cards'} will also be deleted.",
       style: TextStyle(
         color: ThemeColor.text_selected,
-        fontSize: ThemeSize.fs_15,
+        fontSize: getSize(ThemeSize.fs_15),
       ),
     );
   }
@@ -163,7 +158,7 @@ class _ColumnHeaderState extends State<ColumnHeader> {
     return Text(
       widget.column.title,
       style: TextStyle(
-        fontSize: getProportionateWidth(ThemeSize.fs_20),
+        fontSize: getSize(ThemeSize.fs_20),
         fontWeight: FontWeight.w500,
         color: ThemeColor.text_selected,
       ),
@@ -175,8 +170,8 @@ class _ColumnHeaderState extends State<ColumnHeader> {
     return Expanded(
       child: Container(
         padding: EdgeInsets.symmetric(
-          vertical: getProportionateWidth(5),
-          horizontal: getProportionateWidth(15),
+          vertical: getSize(5),
+          horizontal: getSize(15),
         ),
         child: Column(
           children: [

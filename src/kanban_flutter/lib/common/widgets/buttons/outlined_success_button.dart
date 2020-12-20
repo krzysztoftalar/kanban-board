@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:kanban_flutter/style/index.dart';
+
+import '../../../style/index.dart';
 
 class OutlinedSuccessButton extends StatelessWidget {
   final Function handler;

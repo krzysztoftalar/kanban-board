@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../../../core/helpers/boards_validators.dart';
 import '../../../../../../common/widgets/index.dart';
-import '../../../blocs/card_bloc/card_bloc.dart';
-import '../../../../domain/entities/column_item.dart';
+import '../../../../../../core/helpers/boards_validators.dart';
 import '../../../../../../style/index.dart';
+import '../../../../domain/entities/column_item.dart';
+import '../../../blocs/card_bloc/card_bloc.dart';
 
 class ColumnFooter extends StatefulWidget {
   final ColumnItem column;
@@ -23,6 +23,7 @@ class _ColumnFooterState extends State<ColumnFooter> {
   TextEditingController _cardController = TextEditingController();
   bool showForm = false;
   bool isTitleEmpty = true;
+
   final _formKey = GlobalKey<FormState>();
   final _cardFocusNode = FocusNode();
 
@@ -90,7 +91,7 @@ class _ColumnFooterState extends State<ColumnFooter> {
         'Add a card',
         style: TextStyle(
           color: ThemeColor.link,
-          fontSize: ThemeSize.fs_17,
+          fontSize: getSize(ThemeSize.fs_17),
           fontWeight: FontWeight.w400,
         ),
       ),
@@ -102,7 +103,7 @@ class _ColumnFooterState extends State<ColumnFooter> {
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
         OutlinedCancelButton(handler: _toggleShowForm),
-        SizedBox(width: getProportionateHeight(15)),
+        SizedBox(width: getSize(15)),
         OutlinedSuccessButton(
           isFieldEmpty: isTitleEmpty,
           btnText: 'Add Card',
@@ -115,15 +116,15 @@ class _ColumnFooterState extends State<ColumnFooter> {
   Widget _buildForm() {
     return Container(
       padding: EdgeInsets.symmetric(
-        horizontal: getProportionateWidth(5),
-        vertical: getProportionateWidth(15),
+        horizontal: getSize(5),
+        vertical: getSize(15),
       ),
       child: Form(
         key: _formKey,
         child: Column(
           children: [
             _buildCardTitleFormField(),
-            SizedBox(height: getProportionateHeight(10)),
+            SizedBox(height: getSize(10)),
             _buildButtonBar(),
           ],
         ),
@@ -135,7 +136,7 @@ class _ColumnFooterState extends State<ColumnFooter> {
   Widget build(BuildContext context) {
     return Container(
       alignment: Alignment.topLeft,
-      padding: EdgeInsets.symmetric(horizontal: getProportionateWidth(7)),
+      padding: EdgeInsets.symmetric(horizontal: getSize(7)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

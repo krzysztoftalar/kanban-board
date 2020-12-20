@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../../common/widgets/index.dart';
-import '../../../../../../style/index.dart';
-import 'index.dart';
 import '../../../../../../core/error/failures.dart';
+import '../../../../../../style/index.dart';
 import '../../../blocs/index.dart';
+import 'index.dart';
 
 class UserBoards extends StatefulWidget {
   @override
@@ -53,7 +53,7 @@ class _UserBoardsState extends State<UserBoards> {
     return Center(
       child: Text(
         'No Boards',
-        style: TextStyle(fontSize: getProportionateWidth(25)),
+        style: TextStyle(fontSize: getSize(25)),
       ),
     );
   }

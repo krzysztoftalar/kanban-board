@@ -2,14 +2,14 @@ import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
 
+import '../core/api/api_client.dart';
 import '../features/auth/data/datasources/user_remote_data_source.dart';
 import '../features/auth/data/repositories/user_repository_impl.dart';
 import '../features/auth/domain/repositories/user_repository.dart';
 import '../features/auth/domain/usecases/index.dart';
 import '../features/auth/presentation/blocs/user_bloc/user_bloc.dart';
-import '../core/api/api_client.dart';
-import '../features/boards/data/datasources/index.dart';
 import '../features/boards/data/datasources/board_remote_data_source.dart';
+import '../features/boards/data/datasources/index.dart';
 import '../features/boards/data/repositories/index.dart';
 import '../features/boards/domain/repositories/index.dart';
 import '../features/boards/domain/usecases/index.dart';

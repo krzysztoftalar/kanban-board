@@ -1,15 +1,16 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../../../../core/routes/routes.dart';
 import '../../../../../di/injection_container.dart';
+import '../../../../../style/index.dart';
 import '../../blocs/index.dart';
 import 'components/index.dart';
-import '../../../../../style/index.dart';
 
-final List<Widget> _widgetOptions = [
+final List<Widget> _pages = [
   BoardTemplates(),
   UserBoards(),
 ];
@@ -62,10 +63,10 @@ class _HomePageState extends State<HomePage> {
       unselectedItemColor: ThemeColor.text_normal,
       type: BottomNavigationBarType.fixed,
       selectedLabelStyle: TextStyle(
-        fontSize: getProportionateWidth(ThemeSize.fs_17),
+        fontSize: getSize(ThemeSize.fs_17),
       ),
       unselectedLabelStyle: TextStyle(
-        fontSize: getProportionateWidth(ThemeSize.fs_17),
+        fontSize: getSize(ThemeSize.fs_17),
       ),
       items: [
         BottomNavigationBarItem(
@@ -111,10 +112,10 @@ class _HomePageState extends State<HomePage> {
         appBar: _buildAppBar(),
         body: Padding(
           padding: EdgeInsets.symmetric(
-            vertical: getProportionateWidth(25),
-            horizontal: getProportionateWidth(15),
+            vertical: getSize(25),
+            horizontal: getSize(15),
           ),
-          child: _widgetOptions.elementAt(_selectedIndex),
+          child: _pages.elementAt(_selectedIndex),
         ),
       ),
     );

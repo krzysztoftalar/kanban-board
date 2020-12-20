@@ -1,4 +1,4 @@
-class Routes{
+class Routes {
   Routes._();
 
   static const String HOME_PAGE = '/home';

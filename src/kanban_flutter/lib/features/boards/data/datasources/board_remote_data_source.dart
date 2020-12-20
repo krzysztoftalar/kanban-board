@@ -2,9 +2,9 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter/foundation.dart';
 
 import '../../../../core/api/api_client.dart';
-import '../params/index.dart';
-import '../models/index.dart';
 import '../../../../core/error/exceptions.dart';
+import '../models/index.dart';
+import '../params/index.dart';
 
 abstract class BoardRemoteDataSource {
   Future<Either<ServerException, BoardsEnvelope>> getBoards(

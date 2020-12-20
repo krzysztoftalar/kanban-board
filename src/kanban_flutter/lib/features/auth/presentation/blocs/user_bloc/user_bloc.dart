@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
@@ -7,8 +8,8 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../../../../../core/config/app_config.dart';
 import '../../../../../core/usecases/usecase.dart';
 import '../../../data/params/index.dart';
-import '../../../domain/usecases/index.dart';
 import '../../../domain/entities/user.dart';
+import '../../../domain/usecases/index.dart';
 
 part 'user_event.dart';
 
@@ -60,8 +61,8 @@ class UserBloc extends Bloc<UserEvent, UserState> {
   Stream<UserState> _mapCurrentUserToState() async* {
     yield UserLoading();
 
+    storage.delete(key: JWT_KEY);
     final token = await storage.read(key: JWT_KEY);
-
     if (token != null) {
       final userEither = await currentUser(NoParams());
 
