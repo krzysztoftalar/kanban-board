@@ -24,7 +24,7 @@ namespace Application.Services.Column.Commands.UpdateColumnTitle
 
             if (column == null)
             {
-                throw new RestException(HttpStatusCode.NotFound, new { Column = "Not found column" });
+                throw new RestException(HttpStatusCode.NotFound, new { Error = "Not found column" });
             }
 
             if (column.Title == request.Title)

@@ -28,6 +28,7 @@ class ThemeColor {
   static const Color input_bg = Color.fromRGBO(16, 20, 23, .4);
   static const Color board_bg = Color.fromRGBO(27, 33, 38, 1);
   static const Color board_header_bg = Color.fromRGBO(38, 46, 53, .9);
+  static const Color board_header_bg2 = Color.fromRGBO(38, 46, 53, 1);
   static const Color column_bg = Color.fromRGBO(31, 46, 60, 1);
   static const Color card_bg = Color.fromRGBO(44, 63, 81, 1);
   static const Color menu_bg = Color.fromRGBO(42, 62, 80, 1);

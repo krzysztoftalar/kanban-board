@@ -24,7 +24,7 @@ namespace Application.Services.Board.Commands.DeleteBoard
 
             if (board == null)
             {
-                throw new RestException(HttpStatusCode.NotFound, new { Board = "Not found board" });
+                throw new RestException(HttpStatusCode.NotFound, new { Error = "Not found board" });
             }
             
             _context.Boards.Remove(board);

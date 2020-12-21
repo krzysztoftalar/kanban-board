@@ -92,6 +92,7 @@ Future<Either<ServerException, T>> getRemoteData<T>(
 
     return null;
   } on DioError catch (e) {
+    print(e);
     if (e.response.data != '') {
       return Left(ServerException(Error.fromJson(e.response.data).message));
     } else {

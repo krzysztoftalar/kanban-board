@@ -41,8 +41,7 @@ namespace Application.Services.Board.Commands.CreateBoard
 
                 if (template == null)
                 {
-                    throw new RestException(HttpStatusCode.NotFound,
-                        new { BoardTemplate = "Not found board template" });
+                    throw new RestException(HttpStatusCode.NotFound, new { Error = "Not found board template" });
                 }
 
                 int index = 0;

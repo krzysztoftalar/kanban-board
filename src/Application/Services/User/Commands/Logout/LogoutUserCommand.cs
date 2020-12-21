@@ -2,7 +2,7 @@
 
 namespace Application.Services.User.Commands.Logout
 {
-    public class LogoutCommand : IRequest
+    public class LogoutUserCommand : IRequest
     {
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Application.Dtos;
 using Application.Services.User.Commands.Logout;
+using Application.Services.User.Commands.Register;
 using Application.Services.User.Queries.CurrentUser;
 using Application.Services.User.Queries.Login;
 using MediatR;
@@ -18,16 +19,23 @@ namespace WebUI.Controllers
             return await Mediator.Send(query);
         }
 
+        [AllowAnonymous]
+        [HttpPost("register")]
+        public async Task<ActionResult<UserDto>> Register(RegisterUserCommand command)
+        {
+            return await Mediator.Send(command);
+        }
+
         [HttpGet]
         public async Task<ActionResult<UserDto>> CurrentUser()
         {
             return await Mediator.Send(new CurrentUserQuery());
         }
 
-        [HttpPost]
+        [HttpPost("logout")]
         public async Task<ActionResult<Unit>> Logout()
         {
-            return await Mediator.Send(new LogoutCommand());
+            return await Mediator.Send(new LogoutUserCommand());
         }
     }
 }

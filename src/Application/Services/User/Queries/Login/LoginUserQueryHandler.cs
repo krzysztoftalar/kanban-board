@@ -1,5 +1,4 @@
-﻿using System;
-using Application.Errors;
+﻿using Application.Errors;
 using Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Identity;

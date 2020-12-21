@@ -3,19 +3,17 @@ import 'package:flutter/foundation.dart';
 
 import '../../../../core/error/exceptions.dart';
 import '../../../../core/usecases/usecase.dart';
-import '../../data/params/index.dart';
-import '../entities/user.dart';
 import '../repositories/user_repository.dart';
 
-class Login extends UseCase<User, LoginParams> {
+class LogoutUser extends UseCase<bool, NoParams> {
   final UserRepository repository;
 
-  Login({
+  LogoutUser({
     @required this.repository,
   });
 
   @override
-  Future<Either<ServerException, User>> call(LoginParams params) async {
-    return await repository.login(params);
+  Future<Either<ServerException, bool>> call(NoParams params) async {
+    return await repository.logout(params);
   }
 }

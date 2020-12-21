@@ -4,9 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+import '../../../../../common/widgets/index.dart';
 import '../../../../../core/routes/routes.dart';
 import '../../../../../di/injection_container.dart';
 import '../../../../../style/index.dart';
+import '../../../../auth/presentation/blocs/user_bloc/user_bloc.dart';
 import '../../blocs/index.dart';
 import 'components/index.dart';
 
@@ -24,6 +26,7 @@ class _HomePageState extends State<HomePage> {
   StreamSubscription _boardSubscription;
   BoardBloc _boardBloc;
   BoardsBloc _boardsBloc;
+  UserBloc _userBloc;
   int _selectedIndex = 0;
 
   @override
@@ -31,6 +34,7 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     _boardBloc = sl<BoardBloc>();
     _boardsBloc = sl<BoardsBloc>();
+    _userBloc = sl<UserBloc>();
 
     _boardSubscription = _boardBloc.listen((state) {
       if (state is BoardCreated) {
@@ -45,6 +49,7 @@ class _HomePageState extends State<HomePage> {
     super.dispose();
     _boardBloc.close();
     _boardsBloc.close();
+    _userBloc.close();
     _boardSubscription.cancel();
   }
 
@@ -83,12 +88,17 @@ class _HomePageState extends State<HomePage> {
 
   Widget _buildAppBar() {
     return AppBar(
+      automaticallyImplyLeading: false,
       backgroundColor: ThemeColor.board_header_bg,
       title: Text('Git Boards'),
-      leading: IconButton(
-        // TODO Build Side Drawer
-        onPressed: () {},
-        icon: Icon(Icons.menu),
+      leading: Builder(
+        builder: (context) => IconButton(
+          splashColor: ThemeColor.accent.withOpacity(0.3),
+          highlightColor: ThemeColor.accent.withOpacity(0.3),
+          color: ThemeColor.text_normal,
+          icon: Icon(Icons.menu),
+          onPressed: () => Scaffold.of(context).openDrawer(),
+        ),
       ),
     );
   }
@@ -105,11 +115,15 @@ class _HomePageState extends State<HomePage> {
         BlocProvider(
           create: (_) => _boardsBloc,
         ),
+        BlocProvider(
+          create: (_) => _userBloc,
+        ),
       ],
       child: Scaffold(
         backgroundColor: ThemeColor.board_bg,
         bottomNavigationBar: _buildBottomNavigationBar(),
         appBar: _buildAppBar(),
+        drawer: NavDrawer(),
         body: Padding(
           padding: EdgeInsets.symmetric(
             vertical: getSize(25),

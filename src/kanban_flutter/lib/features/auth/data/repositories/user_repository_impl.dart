@@ -20,7 +20,17 @@ class UserRepositoryImpl implements UserRepository {
   }
 
   @override
+  Future<Either<ServerException, User>> register(RegisterParams params) async {
+    return await remoteDataSource.register(params);
+  }
+
+  @override
   Future<Either<ServerException, User>> currentUser(NoParams params) async {
     return await remoteDataSource.currentUser(params);
+  }
+
+  @override
+  Future<Either<ServerException, bool>> logout(NoParams params) async {
+    return await remoteDataSource.logout(params);
   }
 }

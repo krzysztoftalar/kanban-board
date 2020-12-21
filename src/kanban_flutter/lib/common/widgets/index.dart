@@ -1,3 +1,4 @@
+export './drawer/nav_drawer.dart';
 export './indicators/basic_progress_indicator.dart';
 export './indicators/small_progress_indicator.dart';
 export 'buttons/outlined_action_button.dart';

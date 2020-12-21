@@ -70,7 +70,7 @@ class _AuthPageState extends State<AuthPage> {
           highlightColor: ThemeColor.blue.withOpacity(0.4),
           child: _btnContent('Sign Up'),
           padding: EdgeInsets.symmetric(vertical: getSize(20)),
-          onPressed: () => _showForm(context, Container()),
+          onPressed: () => _showForm(context, RegisterForm()),
         ),
       ),
     );

@@ -24,13 +24,17 @@ Future<void> init() async {
     () => UserBloc(
       storage: sl(),
       login: sl(),
+      register: sl(),
       currentUser: sl(),
+      logout: sl(),
     ),
   );
 
   //! Use cases
-  sl.registerLazySingleton(() => Login(repository: sl()));
+  sl.registerLazySingleton(() => LoginUser(repository: sl()));
+  sl.registerLazySingleton(() => RegisterUser(repository: sl()));
   sl.registerLazySingleton(() => CurrentUser(repository: sl()));
+  sl.registerLazySingleton(() => LogoutUser(repository: sl()));
 
   //! Repositories
   sl.registerLazySingleton<UserRepository>(

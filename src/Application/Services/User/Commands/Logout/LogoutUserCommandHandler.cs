@@ -6,16 +6,16 @@ using Microsoft.AspNetCore.Identity;
 
 namespace Application.Services.User.Commands.Logout
 {
-    public class LogoutCommandHandler : IRequestHandler<LogoutCommand>
+    public class LogoutUserCommandHandler : IRequestHandler<LogoutUserCommand>
     {
         private readonly SignInManager<AppUser> _signInManager;
 
-        public LogoutCommandHandler(SignInManager<AppUser> signInManager)
+        public LogoutUserCommandHandler(SignInManager<AppUser> signInManager)
         {
             _signInManager = signInManager;
         }
 
-        public async Task<Unit> Handle(LogoutCommand request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(LogoutUserCommand request, CancellationToken cancellationToken)
         {
             await _signInManager.SignOutAsync();
             

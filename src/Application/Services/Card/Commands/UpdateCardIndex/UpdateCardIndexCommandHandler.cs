@@ -25,7 +25,7 @@ namespace Application.Services.Card.Commands.UpdateCardIndex
 
             if (card == null)
             {
-                throw new RestException(HttpStatusCode.NotFound, new { Card = "Not found card" });
+                throw new RestException(HttpStatusCode.NotFound, new { Error = "Not found card" });
             }
             
             var isColumnIndex = await _context.Columns

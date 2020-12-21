@@ -10,7 +10,7 @@ String emailValidator(String email) {
   return null;
 }
 
-String passwordValidator(String password) {
+String loginPasswordValidator(String password) {
   if (password.isEmpty) {
     return "The field is required";
   }

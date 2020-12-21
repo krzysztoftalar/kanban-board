@@ -26,7 +26,7 @@ namespace Application.Services.Column.Commands.UpdateColumnIndex
 
             if (column == null)
             {
-                throw new RestException(HttpStatusCode.NotFound, new { Column = "Not found column" });
+                throw new RestException(HttpStatusCode.NotFound, new { Error = "Not found column" });
             }
 
             var isColumnIndex = await _context.Columns

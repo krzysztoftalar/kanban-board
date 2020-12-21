@@ -25,7 +25,7 @@ namespace Application.Services.Column.Commands.DeleteColumnCommand
 
             if (column == null)
             {
-                throw new RestException(HttpStatusCode.NotFound, new { Column = "Not found column" });
+                throw new RestException(HttpStatusCode.NotFound, new { Error = "Not found column" });
             }
 
             var columnsToUpdate = await _context

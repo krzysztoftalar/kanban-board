@@ -35,27 +35,27 @@ namespace WebUI.Middleware
             ILogger<ErrorHandlingMiddleware> logger)
         {
             var code = HttpStatusCode.InternalServerError;
-            object errors = null;
+            object error = null;
 
             switch (exception)
             {
                 case RestException re:
                     logger.LogError(exception, "REST ERROR");
-                    errors = re.Errors;
+                    error = re.Error;
                     code = re.Code;
                     break;
                 case { } e:
                     logger.LogError(exception, "SERVER ERROR");
-                    errors = string.IsNullOrWhiteSpace(e.Message) ? "Error" : e.Message;
+                    error = string.IsNullOrWhiteSpace(e.Message) ? "Error" : e.Message;
                     break;
             }
 
             context.Response.ContentType = "application/json";
             context.Response.StatusCode = (int) code;
 
-            if (errors != null)
+            if (error != null)
             {
-                var result = JsonSerializer.Serialize(errors);
+                var result = JsonSerializer.Serialize(error);
 
                 await context.Response.WriteAsync(result);
             }
