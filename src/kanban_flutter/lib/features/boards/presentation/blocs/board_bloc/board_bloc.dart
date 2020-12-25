@@ -1,12 +1,13 @@
 import 'dart:async';
+
 import 'package:bloc/bloc.dart';
 import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 
 import '../../../../../core/error/exceptions.dart';
-import "../../../domain/entities/index.dart";
 import '../../../data/params/index.dart';
+import "../../../domain/entities/index.dart";
 import '../../../domain/usecases/index.dart';
 
 part 'board_event.dart';
@@ -17,11 +18,9 @@ typedef Future<Either<ServerException, Board>> _BoardRequest();
 
 class BoardBloc extends Bloc<BoardEvent, BoardState> {
   final GetBoardById getBoardById;
-  final CreateBoard createBoard;
 
   BoardBloc({
     @required this.getBoardById,
-    @required this.createBoard,
   }) : super(BoardInitial());
 
   @override
@@ -30,18 +29,6 @@ class BoardBloc extends Bloc<BoardEvent, BoardState> {
       yield* _mapBoardLoadedToState(
         event,
         () => getBoardById(GetBoardByIdParams(id: event.boardId)),
-      );
-    } else if (event is CreateBoardEvent) {
-      yield BoardLoading();
-
-      final boardEither = await createBoard(CreateBoardParams(
-        title: event.title,
-        templateId: event.templateId,
-      ));
-
-      yield boardEither.fold(
-        (failure) => BoardError(message: failure.message),
-        (boardId) => BoardCreated(boardId: boardId),
       );
     }
   }

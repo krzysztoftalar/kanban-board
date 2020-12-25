@@ -10,6 +10,7 @@ namespace Infrastructure
         {
             services.AddScoped<IJwtGenerator, JwtGenerator>();
             services.AddScoped<IUserAccessor, UserAccessor>();
+            services.AddScoped<ICookieService, CookieService>();
 
             return services;
         }

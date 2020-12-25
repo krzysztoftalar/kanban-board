@@ -27,3 +27,4 @@ class BoardsState extends Equatable {
   @override
   List<Object> get props => [status, boards, hasReachedMax];
 }
+

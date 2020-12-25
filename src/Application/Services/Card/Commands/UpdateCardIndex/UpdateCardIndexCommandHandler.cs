@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Application.Errors;
 using Application.Extensions;
+using Application.Helpers;
 using Application.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -25,9 +26,10 @@ namespace Application.Services.Card.Commands.UpdateCardIndex
 
             if (card == null)
             {
-                throw new RestException(HttpStatusCode.NotFound, new { Error = "Not found card" });
+                throw new RestException(HttpStatusCode.NotFound,
+                    new { Error = $"Not found card with id: {request.CardId}." });
             }
-            
+
             var isColumnIndex = await _context.Columns
                 .AnyAsync(x => x.BoardId == request.BoardId && x.Index == request.NewColumnIndex, cancellationToken);
 
@@ -96,7 +98,7 @@ namespace Application.Services.Card.Commands.UpdateCardIndex
 
             if (success) return Unit.Value;
 
-            throw new Exception("Problem saving changes");
+            throw new Exception(Constants.ServerSavingError);
         }
     }
 }

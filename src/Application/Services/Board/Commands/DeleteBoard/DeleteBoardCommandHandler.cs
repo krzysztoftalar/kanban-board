@@ -3,6 +3,7 @@ using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using Application.Errors;
+using Application.Helpers;
 using Application.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -24,7 +25,7 @@ namespace Application.Services.Board.Commands.DeleteBoard
 
             if (board == null)
             {
-                throw new RestException(HttpStatusCode.NotFound, new { Error = "Not found board" });
+                throw new RestException(HttpStatusCode.NotFound, new { Error = $"Not found board with id: {request.BoardId}." });
             }
             
             _context.Boards.Remove(board);
@@ -33,7 +34,7 @@ namespace Application.Services.Board.Commands.DeleteBoard
 
             if (success) return Unit.Value;
 
-            throw new Exception("Problem saving changes");
+            throw new Exception(Constants.ServerSavingError);
         }
     }
 }

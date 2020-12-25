@@ -94,30 +94,27 @@ class _LoginFormState extends State<LoginForm> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AuthFormTitle(title: 'Log In'),
-      body: SingleChildScrollView(
-        child: Container(
-          color: ThemeColor.board_bg,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              ServerAuthMessage(),
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: getSize(15)),
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                    children: [
-                      _buildEmailFormField(),
-                      SizedBox(height: getSize(20)),
-                      _buildPasswordFormField(),
-                      SizedBox(height: getSize(20)),
-                      _buildSubmitBtn(),
-                    ],
-                  ),
+      body: Container(
+        color: ThemeColor.board_bg,
+        child: ListView(
+          children: [
+            ServerAuthMessage(),
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: getSize(15)),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  children: [
+                    _buildEmailFormField(),
+                    SizedBox(height: getSize(20)),
+                    _buildPasswordFormField(),
+                    SizedBox(height: getSize(20)),
+                    _buildSubmitBtn(),
+                  ],
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

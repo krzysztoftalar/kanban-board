@@ -1,11 +1,14 @@
 import 'dart:async';
+
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 
-import '../../../domain/usecases/index.dart';
+import '../../../../../core/routes/routes.dart';
+import '../../../../../main.dart';
 import '../../../data/params/index.dart';
 import '../../../domain/entities/index.dart';
+import '../../../domain/usecases/index.dart';
 
 part 'boards_event.dart';
 
@@ -15,10 +18,14 @@ const BOARDS_LIMIT = 20;
 
 class BoardsBloc extends Bloc<BoardsEvent, BoardsState> {
   GetBoards getBoards;
+  CreateBoard createBoard;
+  EditBoard editBoard;
   DeleteBoard deleteBoard;
 
   BoardsBloc({
     @required this.getBoards,
+    @required this.createBoard,
+    @required this.editBoard,
     @required this.deleteBoard,
   }) : super(BoardsState());
 
@@ -28,24 +35,13 @@ class BoardsBloc extends Bloc<BoardsEvent, BoardsState> {
   ) async* {
     if (event is GetBoardsEvent) {
       yield* _mapGetBoardsToState();
+    } else if (event is CreateBoardEvent) {
+      yield* _mapBoardCreatedToState(event);
+    } else if (event is EditBoardEvent) {
+      yield* _mapBoardEditedToState(event);
     } else if (event is DeleteBoardEvent) {
       yield* _mapBoardDeletedToState(event);
     }
-  }
-
-  Stream<BoardsState> _mapBoardDeletedToState(DeleteBoardEvent event) async* {
-    final boardsEither =
-        await deleteBoard(DeleteBoardParams(boardId: event.boardId));
-
-    yield boardsEither.fold(
-        (failure) => state.copyWith(status: BoardsStatus.failure), (success) {
-      final boardsState =
-          List.of(state.boards).where((x) => x.id != event.boardId).toList();
-      return state.copyWith(
-        status: BoardsStatus.success,
-        boards: boardsState,
-      );
-    });
   }
 
   Stream<BoardsState> _mapGetBoardsToState() async* {
@@ -68,6 +64,58 @@ class BoardsBloc extends Bloc<BoardsEvent, BoardsState> {
         status: BoardsStatus.success,
         boards: boardsState,
         hasReachedMax: boardsState.length == boardsEnvelope.boardsCount,
+      );
+    });
+  }
+
+  Stream<BoardsState> _mapBoardCreatedToState(CreateBoardEvent event) async* {
+    final boardEither = await createBoard(CreateBoardParams(
+      title: event.title,
+      templateId: event.templateId,
+    ));
+
+    yield boardEither.fold(
+        (failure) => state.copyWith(status: BoardsStatus.failure), (boardId) {
+      KanbanApp.navigatorKey.currentState
+          .pushNamed(Routes.BOARD_DETAIL_PAGE, arguments: boardId);
+
+      return state;
+    });
+  }
+
+  Stream<BoardsState> _mapBoardEditedToState(EditBoardEvent event) async* {
+    final boardsEither = await editBoard(EditBoardParams(
+      boardId: event.boardId,
+      title: event.title,
+    ));
+
+    yield boardsEither.fold(
+        (failure) => state.copyWith(status: BoardsStatus.failure), (success) {
+      final boardsState = List.of(state.boards)
+          .map(
+            (board) => board.id == event.boardId
+                ? board.copyWith(title: event.title)
+                : board,
+          )
+          .toList();
+      return state.copyWith(
+        status: BoardsStatus.success,
+        boards: boardsState,
+      );
+    });
+  }
+
+  Stream<BoardsState> _mapBoardDeletedToState(DeleteBoardEvent event) async* {
+    final boardsEither =
+        await deleteBoard(DeleteBoardParams(boardId: event.boardId));
+
+    yield boardsEither.fold(
+        (failure) => state.copyWith(status: BoardsStatus.failure), (success) {
+      final boardsState =
+          List.of(state.boards).where((x) => x.id != event.boardId).toList();
+      return state.copyWith(
+        status: BoardsStatus.success,
+        boards: boardsState,
       );
     });
   }

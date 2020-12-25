@@ -12,9 +12,9 @@ import 'style/theme.dart';
 import 'core/config/app_config.dart';
 import 'features/boards/presentation/blocs/simple_bloc_observer.dart';
 
-void main() async {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  setEnvironment(Environment.development);
+  setEnvironment(Environment.Development);
 
   await di.init();
   Bloc.observer = SimpleBlocObserver();

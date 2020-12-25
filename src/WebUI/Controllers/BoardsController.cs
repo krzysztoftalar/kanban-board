@@ -2,6 +2,7 @@
 using Application.Dtos;
 using Application.Services.Board.Commands.CreateBoard;
 using Application.Services.Board.Commands.DeleteBoard;
+using Application.Services.Board.Commands.EditBoard;
 using Application.Services.Board.Queries.GetBoard;
 using Application.Services.Board.Queries.GetBoards;
 using MediatR;
@@ -11,6 +12,12 @@ namespace WebUI.Controllers
 {
     public class BoardsController : BaseController
     {
+        [HttpGet]
+        public async Task<ActionResult<BoardsEnvelope>> GetBoards([FromQuery] GetBoardsQuery query)
+        {
+            return await Mediator.Send(query);
+        }
+
         [HttpGet("{id}")]
         public async Task<ActionResult<BoardDto>> GetBoard(int id)
         {
@@ -23,10 +30,10 @@ namespace WebUI.Controllers
             return await Mediator.Send(command);
         }
 
-        [HttpGet]
-        public async Task<ActionResult<BoardsEnvelope>> GetBoards([FromQuery] GetBoardsQuery query)
+        [HttpPut("{id}")]
+        public async Task<ActionResult<Unit>> EditBoard([FromBody] EditBoardCommand command)
         {
-            return await Mediator.Send(query);
+            return await Mediator.Send(command);
         }
 
         [HttpDelete("{id}")]

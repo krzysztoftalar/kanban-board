@@ -78,7 +78,7 @@ class BoardTemplateItem extends StatelessWidget {
       onTap: () => showCupertinoModalBottomSheet(
         context: context,
         builder: (ctx) => BlocProvider.value(
-          value: BlocProvider.of<BoardBloc>(context),
+          value: BlocProvider.of<BoardsBloc>(context),
           child: CreateBoardForm(templateId: board.id),
         ),
       ),

@@ -16,14 +16,6 @@ class BoardLoaded extends BoardState {
   });
 }
 
-class BoardCreated extends BoardState {
-  final int boardId;
-
-  BoardCreated({
-    @required this.boardId,
-  });
-}
-
 class BoardError extends BoardState {
   final String message;
 

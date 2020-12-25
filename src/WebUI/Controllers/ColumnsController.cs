@@ -1,8 +1,8 @@
 ﻿using System.Threading.Tasks;
 using Application.Services.Column.Commands.CreateColumnCommand;
 using Application.Services.Column.Commands.DeleteColumnCommand;
+using Application.Services.Column.Commands.EditColumn;
 using Application.Services.Column.Commands.UpdateColumnIndex;
-using Application.Services.Column.Commands.UpdateColumnTitle;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,14 +16,14 @@ namespace WebUI.Controllers
             return await Mediator.Send(command);
         }
 
-        [HttpPut("{id}")]
-        public async Task<ActionResult<Unit>> UpdateColumnTitle([FromBody] UpdateColumnTitleCommand command)
+        [HttpPost]
+        public async Task<ActionResult<Unit>> CreateColumn([FromBody] CreateColumnCommand command)
         {
             return await Mediator.Send(command);
         }
 
-        [HttpPost]
-        public async Task<ActionResult<Unit>> CreateColumn([FromBody] CreateColumnCommand command)
+        [HttpPut("{id}")]
+        public async Task<ActionResult<Unit>> EditColumn([FromBody] EditColumnCommand command)
         {
             return await Mediator.Send(command);
         }

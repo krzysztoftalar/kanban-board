@@ -40,7 +40,13 @@ class ConfirmDeleteDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.all(getSize(15)),
-      decoration: BoxDecoration(color: ThemeColor.blue),
+      decoration: BoxDecoration(
+        color: ThemeColor.blue,
+        borderRadius: BorderRadius.only(
+          bottomLeft: Radius.circular(5),
+          bottomRight: Radius.circular(5),
+        ),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

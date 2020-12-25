@@ -9,12 +9,11 @@ abstract class ColumnRemoteDataSource {
   Future<Either<ServerException, bool>> updateColumnIndex(
       UpdateColumnIndexParams params);
 
-  Future<Either<ServerException, bool>> updateColumnTitle(
-      UpdateColumnTitleParams params);
+  Future<Either<ServerException, bool>> createColumn(CreateColumnParams params);
+
+  Future<Either<ServerException, bool>> editColumn(EditColumnParams params);
 
   Future<Either<ServerException, bool>> deleteColumn(DeleteColumnParams params);
-
-  Future<Either<ServerException, bool>> createColumn(CreateColumnParams params);
 }
 
 class ColumnRemoteDataSourceImpl implements ColumnRemoteDataSource {
@@ -37,8 +36,20 @@ class ColumnRemoteDataSourceImpl implements ColumnRemoteDataSource {
   }
 
   @override
-  Future<Either<ServerException, bool>> updateColumnTitle(
-      UpdateColumnTitleParams params) async {
+  Future<Either<ServerException, bool>> createColumn(
+      CreateColumnParams params) async {
+    return getRemoteData<bool>(
+      () => client.httpClient.post(
+        '/columns',
+        data: params.toJson(),
+      ),
+      ApiResponseType.Unit,
+    );
+  }
+
+  @override
+  Future<Either<ServerException, bool>> editColumn(
+      EditColumnParams params) async {
     return getRemoteData<bool>(
       () => client.httpClient.put(
         '/columns/${params.columnId}',
@@ -53,18 +64,6 @@ class ColumnRemoteDataSourceImpl implements ColumnRemoteDataSource {
       DeleteColumnParams params) async {
     return getRemoteData<bool>(
       () => client.httpClient.delete('/columns/${params.columnId}'),
-      ApiResponseType.Unit,
-    );
-  }
-
-  @override
-  Future<Either<ServerException, bool>> createColumn(
-      CreateColumnParams params) async {
-    return getRemoteData<bool>(
-      () => client.httpClient.post(
-        '/columns',
-        data: params.toJson(),
-      ),
       ApiResponseType.Unit,
     );
   }

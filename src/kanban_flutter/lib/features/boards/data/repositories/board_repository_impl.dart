@@ -15,6 +15,12 @@ class BoardRepositoryImpl implements BoardRepository {
     @required this.remoteDataSource,
   });
 
+  @override
+  Future<Either<ServerException, BoardsEnvelope>> getBoards(
+      GetBoardsParams params) async {
+    return await remoteDataSource.getBoards(params);
+  }
+
   Future<Either<ServerException, Board>> getBoardById(int id) async {
     return await remoteDataSource.getBoardById(id);
   }
@@ -26,9 +32,9 @@ class BoardRepositoryImpl implements BoardRepository {
   }
 
   @override
-  Future<Either<ServerException, BoardsEnvelope>> getBoards(
-      GetBoardsParams params) async {
-    return await remoteDataSource.getBoards(params);
+  Future<Either<ServerException, bool>> editBoard(
+      EditBoardParams params) async {
+    return await remoteDataSource.editBoard(params);
   }
 
   @override

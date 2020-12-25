@@ -14,6 +14,8 @@ abstract class BoardRemoteDataSource {
 
   Future<Either<ServerException, int>> createBoard(CreateBoardParams params);
 
+  Future<Either<ServerException, bool>> editBoard(EditBoardParams params);
+
   Future<Either<ServerException, bool>> deleteBoard(DeleteBoardParams params);
 }
 
@@ -42,6 +44,18 @@ class BoardRemoteDataSourceImpl implements BoardRemoteDataSource {
         data: params.toJson(),
       ),
       ApiResponseType.Number,
+    );
+  }
+
+  @override
+  Future<Either<ServerException, bool>> editBoard(
+      EditBoardParams params) async {
+    return getRemoteData<bool>(
+      () => client.httpClient.put(
+        '/boards/${params.boardId}',
+        data: params.toJson(),
+      ),
+      ApiResponseType.Unit,
     );
   }
 

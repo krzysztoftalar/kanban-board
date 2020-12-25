@@ -6,11 +6,11 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-import '../../../../../core/routes/routes.dart';
-import '../../../../../main.dart';
 import '../../../../../core/config/app_config.dart';
 import '../../../../../core/error/exceptions.dart';
+import '../../../../../core/routes/routes.dart';
 import '../../../../../core/usecases/usecase.dart';
+import '../../../../../main.dart';
 import '../../../data/params/index.dart';
 import '../../../domain/entities/user.dart';
 import '../../../domain/usecases/index.dart';
@@ -111,8 +111,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
       (user) {
         storage.delete(key: JWT_KEY);
 
-        KanbanApp.navigatorKey.currentState
-            .pushReplacementNamed(Routes.AUTH_PAGE);
+        KanbanApp.navigatorKey.currentState.popAndPushNamed(Routes.AUTH_PAGE);
 
         return UserAuthenticated(user: null);
       },

@@ -50,6 +50,8 @@ Future<void> init() async {
   sl.registerFactory(
     () => BoardsBloc(
       getBoards: sl(),
+      createBoard: sl(),
+      editBoard: sl(),
       deleteBoard: sl(),
     ),
   );
@@ -57,14 +59,13 @@ Future<void> init() async {
   sl.registerFactory(
     () => BoardBloc(
       getBoardById: sl(),
-      createBoard: sl(),
     ),
   );
 
   sl.registerFactory(
     () => ColumnBloc(
       updateColumnIndex: sl(),
-      updateColumnTitle: sl(),
+      editColumn: sl(),
       deleteColumn: sl(),
       createColumn: sl(),
     ),
@@ -82,12 +83,13 @@ Future<void> init() async {
   sl.registerLazySingleton(() => GetBoards(repository: sl()));
   sl.registerLazySingleton(() => GetBoardById(repository: sl()));
   sl.registerLazySingleton(() => CreateBoard(repository: sl()));
+  sl.registerLazySingleton(() => EditBoard(repository: sl()));
   sl.registerLazySingleton(() => DeleteBoard(repository: sl()));
   // Column
   sl.registerLazySingleton(() => UpdateColumnIndex(repository: sl()));
-  sl.registerLazySingleton(() => UpdateColumnTitle(repository: sl()));
-  sl.registerLazySingleton(() => DeleteColumn(repository: sl()));
   sl.registerLazySingleton(() => CreateColumn(repository: sl()));
+  sl.registerLazySingleton(() => EditColumn(repository: sl()));
+  sl.registerLazySingleton(() => DeleteColumn(repository: sl()));
   // Card
   sl.registerLazySingleton(() => UpdateCardIndex(repository: sl()));
   sl.registerLazySingleton(() => CreateCard(repository: sl()));

@@ -7,8 +7,7 @@ abstract class ColumnRepository {
   Future<Either<ServerException, bool>> updateColumnIndex(
       UpdateColumnIndexParams params);
 
-  Future<Either<ServerException, bool>> updateColumnTitle(
-      UpdateColumnTitleParams params);
+  Future<Either<ServerException, bool>> editColumn(EditColumnParams params);
 
   Future<Either<ServerException, bool>> deleteColumn(DeleteColumnParams params);
 

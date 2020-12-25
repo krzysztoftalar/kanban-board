@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Application.Helpers;
 using Application.Interfaces;
 using MediatR;
 
@@ -30,7 +31,7 @@ namespace Application.Services.Card.Commands.CreateCard
 
             if (success) return Unit.Value;
 
-            throw new Exception("Problem saving changes");
+            throw new Exception(Constants.ServerSavingError);
         }
     }
 }

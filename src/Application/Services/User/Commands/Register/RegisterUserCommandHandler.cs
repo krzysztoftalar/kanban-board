@@ -16,14 +16,16 @@ namespace Application.Services.User.Commands.Register
     {
         private readonly IAppDbContext _context;
         private readonly IJwtGenerator _jwtGenerator;
+        private readonly ICookieService _cookieService;
         private readonly UserManager<AppUser> _userManager;
 
         public RegisterUserCommandHandler(IAppDbContext context, IJwtGenerator jwtGenerator,
-            UserManager<AppUser> userManager)
+            UserManager<AppUser> userManager, ICookieService cookieService)
         {
             _context = context;
             _jwtGenerator = jwtGenerator;
             _userManager = userManager;
+            _cookieService = cookieService;
         }
 
         public async Task<UserDto> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
@@ -48,14 +50,25 @@ namespace Application.Services.User.Commands.Register
 
             if (result.Succeeded)
             {
-                return new UserDto
+                var refreshToken = _jwtGenerator.GenerateRefreshToken(user);
+                
+                await _context.RefreshTokens.AddAsync(refreshToken, cancellationToken);
+            
+                var success = await _context.SaveChangesAsync(cancellationToken) > 0;
+
+                if (success)
                 {
-                    UserName = user.UserName,
-                    Token = _jwtGenerator.CreateToken(user)
-                };
+                    _cookieService.SetCookieToken(refreshToken.Token);
+
+                    return new UserDto
+                    {
+                        UserName = user.UserName,
+                        Token = _jwtGenerator.CreateToken(user)
+                    };
+                }
             }
 
-            throw new Exception("Problem creating user");
+            throw new Exception("Problem creating user.");
         }
     }
 }

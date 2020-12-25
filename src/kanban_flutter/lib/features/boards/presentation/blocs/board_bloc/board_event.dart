@@ -23,16 +23,3 @@ class GetBoardByIdEvent extends BoardEvent {
   @override
   List<Object> get props => [boardId, setLoading];
 }
-
-class CreateBoardEvent extends BoardEvent {
-  final String title;
-  final int templateId;
-
-  CreateBoardEvent({
-    @required this.title,
-    @required this.templateId,
-  });
-
-  @override
-  List<Object> get props => [title, templateId];
-}

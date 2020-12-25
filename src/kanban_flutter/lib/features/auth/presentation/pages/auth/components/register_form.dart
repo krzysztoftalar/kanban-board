@@ -134,34 +134,31 @@ class _RegisterFormState extends State<RegisterForm> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AuthFormTitle(title: 'Get Started with Git Boards'),
-      body: SingleChildScrollView(
-        child: Container(
-          color: ThemeColor.board_bg,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              ServerAuthMessage(),
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: getSize(15)),
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                    children: [
-                      _buildUserNameFormField(),
-                      SizedBox(height: getSize(20)),
-                      _buildEmailFormField(),
-                      SizedBox(height: getSize(20)),
-                      _buildPasswordFormField(),
-                      SizedBox(height: getSize(20)),
-                      _buildConfirmPasswordFormField(),
-                      SizedBox(height: getSize(20)),
-                      _buildSubmitBtn(),
-                    ],
-                  ),
+      body: Container(
+        color: ThemeColor.board_bg,
+        child: ListView(
+          children: [
+            ServerAuthMessage(),
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: getSize(15)),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  children: [
+                    _buildUserNameFormField(),
+                    SizedBox(height: getSize(20)),
+                    _buildEmailFormField(),
+                    SizedBox(height: getSize(20)),
+                    _buildPasswordFormField(),
+                    SizedBox(height: getSize(20)),
+                    _buildConfirmPasswordFormField(),
+                    SizedBox(height: getSize(20)),
+                    _buildSubmitBtn(),
+                  ],
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

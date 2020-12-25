@@ -6,16 +6,15 @@ import '../../../../core/usecases/usecase.dart';
 import '../../data/params/index.dart';
 import '../repositories/index.dart';
 
-class UpdateColumnTitle extends UseCase<bool, UpdateColumnTitleParams> {
-  final ColumnRepository repository;
+class EditBoard extends UseCase<bool, EditBoardParams> {
+  final BoardRepository repository;
 
-  UpdateColumnTitle({
+  EditBoard({
     @required this.repository,
   });
 
   @override
-  Future<Either<ServerException, bool>> call(
-      UpdateColumnTitleParams params) async {
-    return await repository.updateColumnTitle(params);
+  Future<Either<ServerException, bool>> call(EditBoardParams params) async {
+    return await repository.editBoard(params);
   }
 }

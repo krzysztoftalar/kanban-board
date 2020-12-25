@@ -1,10 +1,10 @@
 import 'package:flutter/foundation.dart';
 
-class UpdateColumnTitleParams {
+class EditColumnParams {
   final int columnId;
   final String title;
 
-  UpdateColumnTitleParams({
+  EditColumnParams({
     @required this.columnId,
     @required this.title,
   });

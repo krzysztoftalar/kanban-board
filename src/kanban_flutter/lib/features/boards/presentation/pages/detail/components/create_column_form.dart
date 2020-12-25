@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../../common/widgets/index.dart';
-import '../../../../../../core/helpers/boards_validators.dart';
+import '../../../../../../core/validators/boards_validators.dart';
 import '../../../../../../style/index.dart';
 import '../../../../domain/entities/index.dart';
 import '../../../blocs/column_bloc/column_bloc.dart';

@@ -21,11 +21,11 @@ class UpdateColumnIndexEvent extends ColumnEvent {
   List<Object> get props => [oldIndex, newIndex, columnId, boardId];
 }
 
-class UpdateColumnTitleEvent extends ColumnEvent {
+class EditColumnEvent extends ColumnEvent {
   final int columnId;
   final String title;
 
-  UpdateColumnTitleEvent({
+  EditColumnEvent({
     @required this.columnId,
     @required this.title,
   });

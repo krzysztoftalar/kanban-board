@@ -20,9 +20,9 @@ class ColumnRepositoryImpl implements ColumnRepository {
   }
 
   @override
-  Future<Either<ServerException, bool>> updateColumnTitle(
-      UpdateColumnTitleParams params) async {
-    return await remoteDataSource.updateColumnTitle(params);
+  Future<Either<ServerException, bool>> editColumn(
+      EditColumnParams params) async {
+    return await remoteDataSource.editColumn(params);
   }
 
   @override

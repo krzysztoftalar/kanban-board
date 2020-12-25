@@ -40,7 +40,6 @@ namespace WebUI
                 })
                 .AddFluentValidation(options => { options.RegisterValidatorsFromAssemblyContaining<IAppDbContext>(); });
 
-
             services.AddCors(options =>
                 options.AddPolicy(CorsPolicy,
                     policy =>
@@ -72,6 +71,7 @@ namespace WebUI
             app.UseAuthorization();
 
             app.UseSwaggerDocumentation();
+            app.UseAppContext();
 
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }

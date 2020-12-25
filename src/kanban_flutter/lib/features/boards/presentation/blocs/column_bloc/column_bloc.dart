@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:bloc/bloc.dart';
 import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
@@ -16,15 +17,15 @@ typedef Future<Either<ServerException, bool>> _ColumnRequest();
 
 class ColumnBloc extends Bloc<ColumnEvent, ColumnState> {
   final UpdateColumnIndex updateColumnIndex;
-  final UpdateColumnTitle updateColumnTitle;
-  final DeleteColumn deleteColumn;
+  final EditColumn editColumn;
   final CreateColumn createColumn;
+  final DeleteColumn deleteColumn;
 
   ColumnBloc({
     @required this.updateColumnIndex,
-    @required this.updateColumnTitle,
-    @required this.deleteColumn,
+    @required this.editColumn,
     @required this.createColumn,
+    @required this.deleteColumn,
   }) : super(ColumnInitial());
 
   @override
@@ -32,7 +33,7 @@ class ColumnBloc extends Bloc<ColumnEvent, ColumnState> {
     ColumnEvent event,
   ) async* {
     if (event is UpdateColumnIndexEvent) {
-      yield* _mapCardToState(
+      yield* _mapColumnToState(
         event,
         () => updateColumnIndex(
           UpdateColumnIndexParams(
@@ -43,23 +44,23 @@ class ColumnBloc extends Bloc<ColumnEvent, ColumnState> {
           ),
         ),
       );
-    } else if (event is UpdateColumnTitleEvent) {
-      yield* _mapCardToState(
+    } else if (event is EditColumnEvent) {
+      yield* _mapColumnToState(
         event,
-        () => updateColumnTitle(
-          UpdateColumnTitleParams(
+        () => editColumn(
+          EditColumnParams(
             columnId: event.columnId,
             title: event.title,
           ),
         ),
       );
     } else if (event is DeleteColumnEvent) {
-      yield* _mapCardToState(
+      yield* _mapColumnToState(
         event,
         () => deleteColumn(DeleteColumnParams(columnId: event.columnId)),
       );
     } else if (event is CreateColumnEvent) {
-      yield* _mapCardToState(
+      yield* _mapColumnToState(
         event,
         () => createColumn(
           CreateColumnParams(
@@ -72,7 +73,7 @@ class ColumnBloc extends Bloc<ColumnEvent, ColumnState> {
     }
   }
 
-  Stream<ColumnState> _mapCardToState(
+  Stream<ColumnState> _mapColumnToState(
       ColumnEvent event, _ColumnRequest _columnRequest) async* {
     yield ColumnLoading();
 

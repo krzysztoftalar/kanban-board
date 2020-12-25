@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Application.Dtos;
 using Application.Services.User.Commands.Logout;
+using Application.Services.User.Commands.RefreshToken;
 using Application.Services.User.Commands.Register;
 using Application.Services.User.Queries.CurrentUser;
 using Application.Services.User.Queries.Login;
@@ -30,6 +31,12 @@ namespace WebUI.Controllers
         public async Task<ActionResult<UserDto>> CurrentUser()
         {
             return await Mediator.Send(new CurrentUserQuery());
+        }
+
+        [HttpPost("refreshToken")]
+        public async Task<ActionResult<UserDto>> RefreshToken()
+        {
+            return await Mediator.Send(new RefreshTokenCommand());
         }
 
         [HttpPost("logout")]

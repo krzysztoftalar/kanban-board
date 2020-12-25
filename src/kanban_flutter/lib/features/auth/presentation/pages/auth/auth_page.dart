@@ -54,7 +54,6 @@ class _AuthPageState extends State<AuthPage> {
     );
   }
 
-  // TODO Add register form
   Widget _buildRegisterBtn() {
     return Expanded(
       child: Transform.translate(

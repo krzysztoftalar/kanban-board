@@ -13,19 +13,25 @@ class UserBoards extends StatefulWidget {
 }
 
 class _UserBoardsState extends State<UserBoards> {
-  BoardsBloc get boardBloc => BlocProvider.of<BoardsBloc>(context);
+  BoardsBloc get boardsBloc => BlocProvider.of<BoardsBloc>(context);
   final _scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
-    boardBloc.add(GetBoardsEvent());
+    boardsBloc.add(GetBoardsEvent());
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _scrollController.dispose();
   }
 
   bool _handleScrollNotification(ScrollNotification notification) {
     if (notification is ScrollEndNotification &&
         _scrollController.position.extentAfter == 0) {
-      boardBloc.add(GetBoardsEvent());
+      boardsBloc.add(GetBoardsEvent());
     }
 
     return false;

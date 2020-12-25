@@ -13,5 +13,7 @@ abstract class BoardRepository {
 
   Future<Either<ServerException, int>> createBoard(CreateBoardParams params);
 
+  Future<Either<ServerException, bool>> editBoard(EditBoardParams params);
+
   Future<Either<ServerException, bool>> deleteBoard(DeleteBoardParams params);
 }

@@ -8,14 +8,14 @@ namespace WebUI.Controllers
 {
     public class CardsController : BaseController
     {
-        [HttpPut("{id}/drag")]
-        public async Task<ActionResult<Unit>> UpdateColumnIndex([FromBody] UpdateCardIndexCommand command)
+        [HttpPost]
+        public async Task<ActionResult<Unit>> CreateCard([FromBody] CreateCardCommand command)
         {
             return await Mediator.Send(command);
         }
 
-        [HttpPost]
-        public async Task<ActionResult<Unit>> CreateCard([FromBody] CreateCardCommand command)
+        [HttpPut("{id}/drag")]
+        public async Task<ActionResult<Unit>> UpdateCardIndex([FromBody] UpdateCardIndexCommand command)
         {
             return await Mediator.Send(command);
         }

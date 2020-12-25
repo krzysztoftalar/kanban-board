@@ -21,6 +21,7 @@ dependencies:
   modal_bottom_sheet: ^1.0.0+1
   cupertino_icons: ^1.0.1
   carousel_slider: ^2.3.1
+  animations: ^1.1.2
 
 dev_dependencies:
   flutter_test:

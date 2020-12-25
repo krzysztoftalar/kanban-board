@@ -38,3 +38,5 @@ class RegisterEvent extends UserEvent {
 class CurrentUserEvent extends UserEvent {}
 
 class LogoutEvent extends UserEvent {}
+
+class RefreshTokenEvent extends UserEvent {}

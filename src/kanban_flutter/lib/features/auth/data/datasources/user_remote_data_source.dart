@@ -16,6 +16,8 @@ abstract class UserRemoteDataSource {
   Future<Either<ServerException, User>> currentUser(NoParams params);
 
   Future<Either<ServerException, bool>> logout(NoParams params);
+
+  Future<Either<ServerException, User>> refreshToken(NoParams params);
 }
 
 class UserRemoteDataSourceImpl implements UserRemoteDataSource {
@@ -63,6 +65,15 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
     return getRemoteData<bool>(
       () => client.httpClient.post('/users/logout'),
       ApiResponseType.Unit,
+    );
+  }
+
+  @override
+  Future<Either<ServerException, User>> refreshToken(NoParams params) async {
+    return getRemoteData<User>(
+      () => client.httpClient.post('/users/refreshToken'),
+      ApiResponseType.Object,
+      UserModel.fromJsonModel,
     );
   }
 }

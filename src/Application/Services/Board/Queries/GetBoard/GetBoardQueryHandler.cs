@@ -30,7 +30,7 @@ namespace Application.Services.Board.Queries.GetBoard
 
             if (board == null)
             {
-                throw new RestException(HttpStatusCode.NotFound, new { Error = "Not found board" });
+                throw new RestException(HttpStatusCode.NotFound, new { Error = $"Not found board with id: {request.Id}." });
             }
 
             return board;

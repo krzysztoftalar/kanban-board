@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Application.Errors;
 using Application.Extensions;
+using Application.Helpers;
 using Application.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -26,7 +27,7 @@ namespace Application.Services.Column.Commands.UpdateColumnIndex
 
             if (column == null)
             {
-                throw new RestException(HttpStatusCode.NotFound, new { Error = "Not found column" });
+                throw new RestException(HttpStatusCode.NotFound, new { Error = $"Not found column with id: {request.ColumnId}." });
             }
 
             var isColumnIndex = await _context.Columns
@@ -65,7 +66,7 @@ namespace Application.Services.Column.Commands.UpdateColumnIndex
 
             if (success) return Unit.Value;
 
-            throw new Exception("Problem saving changes");
+            throw new Exception(Constants.ServerSavingError);
         }
     }
 }

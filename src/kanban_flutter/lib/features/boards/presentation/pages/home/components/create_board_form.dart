@@ -5,13 +5,16 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../../../common/widgets/index.dart';
 import '../../../../../../core/helpers/boards_validators.dart';
 import '../../../../../../style/index.dart';
-import '../../../blocs/board_bloc/board_bloc.dart';
+import '../../../../domain/entities/index.dart';
+import '../../../blocs/index.dart';
 
 class CreateBoardForm extends StatefulWidget {
   final int templateId;
+  final Board board;
 
   CreateBoardForm({
-    @required this.templateId,
+    this.templateId,
+    this.board,
   });
 
   @override
@@ -19,17 +22,21 @@ class CreateBoardForm extends StatefulWidget {
 }
 
 class _CreateBoardFormState extends State<CreateBoardForm> {
-  BoardBloc get boardBloc => BlocProvider.of<BoardBloc>(context);
-  TextEditingController _boardController = TextEditingController();
+  BoardsBloc get boardsBloc => BlocProvider.of<BoardsBloc>(context);
+  TextEditingController _boardController;
   bool isTitleEmpty = true;
 
   final _formKey = GlobalKey<FormState>();
   final _boardFocusNode = FocusNode();
 
+  bool get isEdited => widget.board != null;
+
   @override
   void initState() {
     super.initState();
     _boardFocusNode.requestFocus();
+    _boardController =
+        TextEditingController(text: isEdited ? widget.board.title : '');
   }
 
   @override
@@ -39,14 +46,21 @@ class _CreateBoardFormState extends State<CreateBoardForm> {
     _boardController.dispose();
   }
 
-  void _createBoard() {
+  void _submitForm() {
     if (_formKey.currentState.validate()) {
       _formKey.currentState.save();
 
-      boardBloc.add(CreateBoardEvent(
-        title: _boardController.text,
-        templateId: widget.templateId,
-      ));
+      if (isEdited) {
+        boardsBloc.add(EditBoardEvent(
+          boardId: widget.board.id,
+          title: _boardController.text,
+        ));
+      } else {
+        boardsBloc.add(CreateBoardEvent(
+          title: _boardController.text,
+          templateId: widget.templateId,
+        ));
+      }
 
       Navigator.of(context).pop();
     }
@@ -56,7 +70,7 @@ class _CreateBoardFormState extends State<CreateBoardForm> {
     return TextFormField(
       controller: _boardController,
       focusNode: _boardFocusNode,
-      onFieldSubmitted: (_) => _createBoard(),
+      onFieldSubmitted: (_) => _submitForm(),
       decoration: InputDecoration(hintText: "Type a name for your board"),
       style: defaultTextStyle,
       onChanged: (value) {
@@ -88,7 +102,7 @@ class _CreateBoardFormState extends State<CreateBoardForm> {
               children: [
                 Center(
                   child: Text(
-                    'Create Board',
+                    isEdited ? 'Edit Board' : 'Create Board',
                     style: TextStyle(
                       color: ThemeColor.text_selected,
                       fontSize: getSize(ThemeSize.fs_20),
@@ -110,8 +124,8 @@ class _CreateBoardFormState extends State<CreateBoardForm> {
                   alignment: Alignment.topRight,
                   child: OutlinedSuccessButton(
                     isFieldEmpty: isTitleEmpty,
-                    btnText: 'Create Board',
-                    handler: _createBoard,
+                    btnText: isEdited ? 'Save Changes' : 'Create Board',
+                    handler: _submitForm,
                   ),
                 ),
               ],

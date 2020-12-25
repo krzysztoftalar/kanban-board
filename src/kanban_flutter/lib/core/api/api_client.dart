@@ -1,8 +1,10 @@
 import 'dart:io';
 
+import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dartz/dartz.dart';
 import 'package:dio/adapter.dart';
 import 'package:dio/dio.dart';
+import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
@@ -21,7 +23,7 @@ class ApiClient {
   });
 
   Dio get httpClient {
-    if (config[ENVIRONMENT] == Environment.development) {
+    if (config[ENVIRONMENT] == Environment.Development) {
       (dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate =
           (HttpClient client) {
         client.badCertificateCallback =
@@ -29,6 +31,11 @@ class ApiClient {
         return client;
       };
     }
+
+    var cookieJar = CookieJar();
+    dio.interceptors.add(CookieManager(cookieJar));
+    print(cookieJar
+        .loadForRequest(Uri.parse("https://localhost:5001/api/")));
 
     dio.interceptors.add(
       InterceptorsWrapper(

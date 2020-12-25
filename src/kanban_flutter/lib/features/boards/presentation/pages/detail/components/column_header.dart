@@ -76,7 +76,7 @@ class _ColumnHeaderState extends State<ColumnHeader> {
       _formKey.currentState.save();
 
       columnBloc.add(
-        UpdateColumnTitleEvent(
+        EditColumnEvent(
           columnId: widget.column.id,
           title: newColumnTitle,
         ),

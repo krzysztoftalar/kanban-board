@@ -1,11 +1,9 @@
-import 'dart:async';
-
+import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../../../../common/widgets/index.dart';
-import '../../../../../core/routes/routes.dart';
 import '../../../../../di/injection_container.dart';
 import '../../../../../style/index.dart';
 import '../../../../auth/presentation/blocs/user_bloc/user_bloc.dart';
@@ -23,7 +21,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  StreamSubscription _boardSubscription;
   BoardBloc _boardBloc;
   BoardsBloc _boardsBloc;
   UserBloc _userBloc;
@@ -35,13 +32,6 @@ class _HomePageState extends State<HomePage> {
     _boardBloc = sl<BoardBloc>();
     _boardsBloc = sl<BoardsBloc>();
     _userBloc = sl<UserBloc>();
-
-    _boardSubscription = _boardBloc.listen((state) {
-      if (state is BoardCreated) {
-        Navigator.of(context)
-            .pushNamed(Routes.BOARD_DETAIL_PAGE, arguments: state.boardId);
-      }
-    });
   }
 
   @override
@@ -50,7 +40,6 @@ class _HomePageState extends State<HomePage> {
     _boardBloc.close();
     _boardsBloc.close();
     _userBloc.close();
-    _boardSubscription.cancel();
   }
 
   void _onBottomNavigationTap(int index) {
@@ -125,11 +114,22 @@ class _HomePageState extends State<HomePage> {
         appBar: _buildAppBar(),
         drawer: NavDrawer(),
         body: Padding(
-          padding: EdgeInsets.symmetric(
-            vertical: getSize(25),
-            horizontal: getSize(15),
+          padding: EdgeInsets.all(getSize(15)),
+          child: PageTransitionSwitcher(
+            reverse: _selectedIndex == 0,
+            duration: Duration(milliseconds: 400),
+            transitionBuilder: (Widget child, Animation<double> animation,
+                Animation<double> secondaryAnimation) {
+              return SharedAxisTransition(
+                child: child,
+                animation: animation,
+                secondaryAnimation: secondaryAnimation,
+                fillColor: Colors.transparent,
+                transitionType: SharedAxisTransitionType.horizontal,
+              );
+            },
+            child: _pages.elementAt(_selectedIndex),
           ),
-          child: _pages.elementAt(_selectedIndex),
         ),
       ),
     );

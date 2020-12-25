@@ -33,4 +33,9 @@ class UserRepositoryImpl implements UserRepository {
   Future<Either<ServerException, bool>> logout(NoParams params) async {
     return await remoteDataSource.logout(params);
   }
+
+  @override
+  Future<Either<ServerException, User>> refreshToken(NoParams params) async {
+    return await remoteDataSource.refreshToken(params);
+  }
 }

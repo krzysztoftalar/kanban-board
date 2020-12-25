@@ -13,4 +13,6 @@ abstract class UserRepository {
   Future<Either<ServerException, User>> currentUser(NoParams params);
 
   Future<Either<ServerException, bool>> logout(NoParams params);
+
+  Future<Either<ServerException, User>> refreshToken(NoParams params);
 }

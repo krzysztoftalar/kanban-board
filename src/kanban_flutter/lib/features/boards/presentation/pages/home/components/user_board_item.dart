@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 import '../../../../../../common/widgets/index.dart';
 import '../../../../../../core/routes/routes.dart';
@@ -8,6 +9,8 @@ import '../../../../../../style/index.dart';
 import '../../../../data/repositories/board_templates_repository_impl.dart';
 import '../../../../domain/entities/index.dart';
 import '../../../blocs/boards_bloc/boards_bloc.dart';
+import '../../../blocs/index.dart';
+import 'index.dart';
 
 enum PopUpMenuOptions {
   Rename,
@@ -34,10 +37,14 @@ class _UserBoardItemState extends State<UserBoardItem> {
 
   void _menuChoiceAction(PopUpMenuOptions choice) {
     switch (choice) {
-      // TODO Add board rename functionality
       case PopUpMenuOptions.Rename:
-        // _toggleShowForm();
-        // _columnFocusNode.requestFocus();
+        showCupertinoModalBottomSheet(
+          context: context,
+          builder: (ctx) => BlocProvider.value(
+            value: boardsBloc,
+            child: CreateBoardForm(board: widget.board),
+          ),
+        );
         break;
       case PopUpMenuOptions.Delete:
         _toggleConfirmDialog();
@@ -140,11 +147,7 @@ class _UserBoardItemState extends State<UserBoardItem> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(bottom: getSize(10)),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(5),
-        color: ThemeColor.card_bg,
-      ),
+      margin: EdgeInsets.only(bottom: getSize(5)),
       child: Column(
         children: [
           _buildListTile(),
