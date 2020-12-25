@@ -1,12 +1,12 @@
 import 'dart:async';
 import 'dart:convert';
 
-import '../../di/injection_container.dart';
-import '../../features/auth/presentation/blocs/user_bloc/user_bloc.dart';
+import '../../../../di/injection_container.dart';
+import '../../presentation/blocs/user_bloc/user_bloc.dart';
 
 abstract class TokenService {
   void startRefreshTokenTimer(String token);
-  void stopTimer();
+  void stopRefreshTokenTimer();
 }
 
 class TokenServiceImpl implements TokenService {
@@ -51,5 +51,5 @@ class TokenServiceImpl implements TokenService {
     );
   }
 
-  void stopTimer() => timer.cancel();
+  void stopRefreshTokenTimer() => timer.cancel();
 }

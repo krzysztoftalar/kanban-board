@@ -127,6 +127,10 @@ class _UserBoardItemState extends State<UserBoardItem> {
               color: ThemeColor.blue,
               width: 2.0,
             ),
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(5),
+              topRight: Radius.circular(5),
+            ),
           )
         : BoxDecoration();
 
@@ -147,7 +151,7 @@ class _UserBoardItemState extends State<UserBoardItem> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(bottom: getSize(5)),
+      // margin: EdgeInsets.only(bottom: getSize(5)),
       child: Column(
         children: [
           _buildListTile(),
@@ -156,6 +160,7 @@ class _UserBoardItemState extends State<UserBoardItem> {
                   cancelHandler: _toggleConfirmDialog,
                   deleteHandler: _deleteBoard,
                   messageWidget: _buildConfirmDialogText,
+                  borderRadius: 5,
                 )
               : SizedBox.shrink(),
         ],

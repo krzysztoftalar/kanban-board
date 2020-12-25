@@ -23,7 +23,8 @@ class _AuthPageState extends State<AuthPage> {
 
     _userBloc.listen((state) {
       if (state is UserAuthenticated) {
-        Navigator.of(context).popAndPushNamed(Routes.HOME_PAGE);
+        Navigator.of(context).pop();
+        Navigator.of(context).pushReplacementNamed(Routes.HOME_PAGE);
       }
     });
   }

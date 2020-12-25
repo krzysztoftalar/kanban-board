@@ -3,4 +3,3 @@ export 'boards_bloc/boards_bloc.dart';
 export 'card_bloc/card_bloc.dart';
 export 'column_bloc/column_bloc.dart';
 export 'simple_bloc_observer.dart';
-export 'ui_bloc/ui_bloc.dart';

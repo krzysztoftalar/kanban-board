@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../../common/widgets/index.dart';
-import '../../../../../../core/helpers/boards_validators.dart';
+import '../../../../../../core/validators/boards_validators.dart';
 import '../../../../../../style/index.dart';
 import '../../../../domain/entities/column_item.dart';
 import '../../../blocs/column_bloc/column_bloc.dart';
@@ -143,10 +143,17 @@ class _ColumnHeaderState extends State<ColumnHeader> {
 
   Widget _buildConfirmDialogText() {
     final cardsCount = widget.column.cards.length;
+    String title = '';
+
+    if (cardsCount == 0) {
+      title = "Are you sure you want to delete this column?";
+    } else {
+      title = "Are you sure you want to delete this column?\n"
+          "$cardsCount ${cardsCount == 1 ? 'card' : 'cards'} will also be deleted.";
+    }
 
     return Text(
-      "Are you sure you want to delete this column?\n"
-      "$cardsCount ${cardsCount == 1 ? 'card' : 'cards'} will also be deleted.",
+      title,
       style: TextStyle(
         color: ThemeColor.text_selected,
         fontSize: getSize(ThemeSize.fs_15),

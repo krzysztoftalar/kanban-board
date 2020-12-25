@@ -5,6 +5,7 @@ import 'package:get_it/get_it.dart';
 import '../core/api/api_client.dart';
 import '../features/auth/data/datasources/user_remote_data_source.dart';
 import '../features/auth/data/repositories/user_repository_impl.dart';
+import '../features/auth/data/services/token_service.dart';
 import '../features/auth/domain/repositories/user_repository.dart';
 import '../features/auth/domain/usecases/index.dart';
 import '../features/auth/presentation/blocs/user_bloc/user_bloc.dart';
@@ -27,6 +28,8 @@ Future<void> init() async {
       register: sl(),
       currentUser: sl(),
       logout: sl(),
+      refreshToken: sl(),
+      tokenService: sl(),
     ),
   );
 
@@ -35,6 +38,7 @@ Future<void> init() async {
   sl.registerLazySingleton(() => RegisterUser(repository: sl()));
   sl.registerLazySingleton(() => CurrentUser(repository: sl()));
   sl.registerLazySingleton(() => LogoutUser(repository: sl()));
+  sl.registerLazySingleton(() => RefreshToken(repository: sl()));
 
   //! Repositories
   sl.registerLazySingleton<UserRepository>(
@@ -109,6 +113,9 @@ Future<void> init() async {
       () => ColumnRemoteDataSourceImpl(client: sl()));
   sl.registerLazySingleton<CardRemoteDataSource>(
       () => CardRemoteDataSourceImpl(client: sl()));
+
+  //! Services
+  sl.registerLazySingleton<TokenService>(() => TokenServiceImpl());
 
   // ========================================================
   //! Api

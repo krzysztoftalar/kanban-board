@@ -7,11 +7,13 @@ class ConfirmDeleteDialog extends StatelessWidget {
   final Function deleteHandler;
   final Function cancelHandler;
   final Function messageWidget;
+  final double borderRadius;
 
   ConfirmDeleteDialog({
     @required this.deleteHandler,
     @required this.cancelHandler,
     @required this.messageWidget,
+    this.borderRadius = 0,
   });
 
   Widget _buildDeleteButton() {
@@ -43,8 +45,8 @@ class ConfirmDeleteDialog extends StatelessWidget {
       decoration: BoxDecoration(
         color: ThemeColor.blue,
         borderRadius: BorderRadius.only(
-          bottomLeft: Radius.circular(5),
-          bottomRight: Radius.circular(5),
+          bottomLeft: Radius.circular(borderRadius),
+          bottomRight: Radius.circular(borderRadius),
         ),
       ),
       child: Column(

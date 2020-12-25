@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../../../core/validators/index.dart';
 import '../../../../../../common/widgets/index.dart';
-import '../../../../../../core/helpers/index.dart';
 import '../../../../../../style/index.dart';
 import '../../../blocs/user_bloc/user_bloc.dart';
 import 'index.dart';
