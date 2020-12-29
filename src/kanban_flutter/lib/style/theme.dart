@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'index.dart';
 
@@ -18,6 +19,7 @@ ThemeData theme() {
 AppBarTheme appBarTheme() {
   return AppBarTheme(
     color: ThemeColor.board_header_bg,
+    brightness: Brightness.dark,
     textTheme: TextTheme(
       headline6: TextStyle(
         color: ThemeColor.text_normal,

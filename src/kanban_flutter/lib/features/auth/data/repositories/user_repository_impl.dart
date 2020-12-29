@@ -2,7 +2,6 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter/foundation.dart';
 
 import '../../../../core/error/exceptions.dart';
-import '../../../../core/usecases/usecase.dart';
 import '../../domain/entities/user.dart';
 import '../../domain/repositories/user_repository.dart';
 import '../datasources/user_remote_data_source.dart';
@@ -25,17 +24,12 @@ class UserRepositoryImpl implements UserRepository {
   }
 
   @override
-  Future<Either<ServerException, User>> currentUser(NoParams params) async {
+  Future<Either<ServerException, User>> currentUser(CurrentUserParams params) async {
     return await remoteDataSource.currentUser(params);
   }
 
   @override
-  Future<Either<ServerException, bool>> logout(NoParams params) async {
+  Future<Either<ServerException, bool>> logout(LogoutParams params) async {
     return await remoteDataSource.logout(params);
-  }
-
-  @override
-  Future<Either<ServerException, User>> refreshToken(NoParams params) async {
-    return await remoteDataSource.refreshToken(params);
   }
 }

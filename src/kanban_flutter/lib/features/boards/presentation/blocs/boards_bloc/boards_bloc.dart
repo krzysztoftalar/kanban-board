@@ -3,6 +3,9 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:kanban_flutter/common/widgets/index.dart';
+import 'package:kanban_flutter/style/index.dart';
 
 import '../../../../../core/routes/routes.dart';
 import '../../../../../main.dart';
@@ -107,12 +110,17 @@ class BoardsBloc extends Bloc<BoardsEvent, BoardsState> {
 
   Stream<BoardsState> _mapBoardDeletedToState(DeleteBoardEvent event) async* {
     final boardsEither =
-        await deleteBoard(DeleteBoardParams(boardId: event.boardId));
+        await deleteBoard(DeleteBoardParams(boardId: event.board.id));
 
     yield boardsEither.fold(
         (failure) => state.copyWith(status: BoardsStatus.failure), (success) {
+      GlobalSnackBar.show(
+        "${event.board.title} deleted",
+        ThemeColor.snackBar_success_bg,
+      );
+
       final boardsState =
-          List.of(state.boards).where((x) => x.id != event.boardId).toList();
+          List.of(state.boards).where((x) => x.id != event.board.id).toList();
       return state.copyWith(
         status: BoardsStatus.success,
         boards: boardsState,

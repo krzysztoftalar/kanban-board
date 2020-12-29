@@ -2,10 +2,10 @@
 {
     public static class Constants
     {
-        // Cookies
-        public const string RefreshCookieToken = "refreshToken";
-        
+        // Header names
+        public static readonly string TokenExpired = "Token-Expired";
+
         // Errors
-        public const string ServerSavingError = "Problem saving changes.";
+        public static readonly string ServerSavingError = "Problem saving changes.";
     }
 }

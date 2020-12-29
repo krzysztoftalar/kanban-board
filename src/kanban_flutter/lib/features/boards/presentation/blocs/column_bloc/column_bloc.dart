@@ -5,6 +5,9 @@ import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 
+import '../../../../../common/widgets/index.dart';
+import "../../../domain/entities/index.dart";
+import '../../../../../style/theme_color.dart';
 import '../../../../../core/error/exceptions.dart';
 import '../../../data/params/index.dart';
 import '../../../domain/usecases/index.dart';
@@ -57,7 +60,7 @@ class ColumnBloc extends Bloc<ColumnEvent, ColumnState> {
     } else if (event is DeleteColumnEvent) {
       yield* _mapColumnToState(
         event,
-        () => deleteColumn(DeleteColumnParams(columnId: event.columnId)),
+        () => deleteColumn(DeleteColumnParams(columnId: event.column.id)),
       );
     } else if (event is CreateColumnEvent) {
       yield* _mapColumnToState(
@@ -81,7 +84,21 @@ class ColumnBloc extends Bloc<ColumnEvent, ColumnState> {
 
     yield cardEither.fold(
       (failure) => ColumnError(message: failure.message),
-      (success) => ColumnSuccess(),
+      (success) {
+        if (event is CreateColumnEvent) {
+          GlobalSnackBar.show(
+            "${event.title} column successfully created",
+            ThemeColor.snackBar_success_bg,
+          );
+        } else if (event is DeleteColumnEvent) {
+          GlobalSnackBar.show(
+            "${event.column.title} deleted",
+            ThemeColor.snackBar_success_bg,
+          );
+        }
+
+        return ColumnSuccess();
+      },
     );
   }
 }

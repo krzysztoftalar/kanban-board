@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../style/index.dart';
-import 'index.dart';
+import '../../../style/index.dart';
+import '../index.dart';
 
 class ConfirmDeleteDialog extends StatelessWidget {
   final Function deleteHandler;

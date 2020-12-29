@@ -22,12 +22,18 @@ dependencies:
   cupertino_icons: ^1.0.1
   carousel_slider: ^2.3.1
   animations: ^1.1.2
-  dio_cookie_manager: ^1.0.0
-  cookie_jar: ^1.0.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  flutter_launcher_icons: ^0.8.1
+
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/images/git_boards_logo.png"
+  adaptive_icon_background: "#191919"
+  adaptive_icon_foreground: "assets/images/git_boards_logo.png"
 
 flutter:
   uses-material-design: true

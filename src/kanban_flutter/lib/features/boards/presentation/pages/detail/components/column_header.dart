@@ -32,6 +32,8 @@ class _ColumnHeaderState extends State<ColumnHeader> {
   final _formKey = GlobalKey<FormState>();
   final _columnFocusNode = FocusNode();
 
+  int get cardsCount => widget.column.cards.length;
+
   @override
   void initState() {
     super.initState();
@@ -88,7 +90,7 @@ class _ColumnHeaderState extends State<ColumnHeader> {
 
   void _deleteColumn() {
     _toggleConfirmDialog();
-    columnBloc.add(DeleteColumnEvent(columnId: widget.column.id));
+    columnBloc.add(DeleteColumnEvent(column: widget.column));
   }
 
   Widget _buildColumnTitleForm() {
@@ -115,34 +117,36 @@ class _ColumnHeaderState extends State<ColumnHeader> {
   }
 
   Widget _buildPopupMenu() {
-    return PopupMenuButton<PopUpMenuOptions>(
-      onSelected: _menuChoiceAction,
-      offset: Offset(0, getSize(15)),
-      color: ThemeColor.menu_bg,
-      icon: Icon(
-        Icons.more_vert,
-        color: ThemeColor.text_normal,
-      ),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(Radius.circular(5)),
-      ),
-      itemBuilder: (_) => [
-        PopupMenuItem(
-          child: Text('Rename'),
-          textStyle: defaultTextStyle,
-          value: PopUpMenuOptions.Rename,
+    return Container(
+      height: getSize(35),
+      child: PopupMenuButton<PopUpMenuOptions>(
+        offset: Offset(0, getSize(15)),
+        onSelected: _menuChoiceAction,
+        color: ThemeColor.menu_bg,
+        icon: Icon(
+          Icons.more_vert,
+          color: ThemeColor.text_normal,
         ),
-        PopupMenuItem(
-          child: Text('Delete'),
-          textStyle: defaultTextStyle,
-          value: PopUpMenuOptions.Delete,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(5)),
         ),
-      ],
+        itemBuilder: (_) => [
+          PopupMenuItem(
+            child: Text('Rename'),
+            textStyle: defaultTextStyle,
+            value: PopUpMenuOptions.Rename,
+          ),
+          PopupMenuItem(
+            child: Text('Delete'),
+            textStyle: defaultTextStyle,
+            value: PopUpMenuOptions.Delete,
+          ),
+        ],
+      ),
     );
   }
 
   Widget _buildConfirmDialogText() {
-    final cardsCount = widget.column.cards.length;
     String title = '';
 
     if (cardsCount == 0) {
@@ -162,12 +166,29 @@ class _ColumnHeaderState extends State<ColumnHeader> {
   }
 
   Widget _buildColumnTitle() {
-    return Text(
-      widget.column.title,
-      style: TextStyle(
-        fontSize: getSize(ThemeSize.fs_20),
-        fontWeight: FontWeight.w500,
-        color: ThemeColor.text_selected,
+    return Container(
+      padding: EdgeInsets.only(top: getSize(7), bottom: getSize(5)),
+      child: Text(
+        widget.column.title,
+        style: TextStyle(
+          fontSize: getSize(ThemeSize.fs_20),
+          fontWeight: FontWeight.w600,
+          color: ThemeColor.text_selected,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCardsCount() {
+    return Container(
+      alignment: Alignment.topLeft,
+      padding: EdgeInsets.only(bottom: getSize(8)),
+      child: Text(
+        "$cardsCount ${cardsCount == 1 ? 'card' : 'cards'}",
+        style: TextStyle(
+          fontSize: ThemeSize.fs_15,
+          color: ThemeColor.text_disabled,
+        ),
       ),
     );
   }
@@ -178,12 +199,13 @@ class _ColumnHeaderState extends State<ColumnHeader> {
       child: Container(
         padding: EdgeInsets.symmetric(
           vertical: getSize(5),
-          horizontal: getSize(15),
+          horizontal: getSize(12),
         ),
         child: Column(
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Expanded(
                   child:
@@ -192,6 +214,7 @@ class _ColumnHeaderState extends State<ColumnHeader> {
                 _buildPopupMenu(),
               ],
             ),
+            _buildCardsCount(),
             showConfirmDialog
                 ? ConfirmDeleteDialog(
                     cancelHandler: _toggleConfirmDialog,

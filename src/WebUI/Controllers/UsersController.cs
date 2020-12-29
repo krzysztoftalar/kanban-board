@@ -1,9 +1,8 @@
 ﻿using System.Threading.Tasks;
 using Application.Dtos;
+using Application.Services.User.Commands.CurrentUser;
 using Application.Services.User.Commands.Logout;
-using Application.Services.User.Commands.RefreshToken;
 using Application.Services.User.Commands.Register;
-using Application.Services.User.Queries.CurrentUser;
 using Application.Services.User.Queries.Login;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -22,27 +21,22 @@ namespace WebUI.Controllers
 
         [AllowAnonymous]
         [HttpPost("register")]
-        public async Task<ActionResult<UserDto>> Register(RegisterUserCommand command)
+        public async Task<ActionResult<UserDto>> Register([FromBody] RegisterUserCommand command)
         {
             return await Mediator.Send(command);
         }
 
-        [HttpGet]
-        public async Task<ActionResult<UserDto>> CurrentUser()
+        [AllowAnonymous]
+        [HttpPost("current")]
+        public async Task<ActionResult<UserDto>> CurrentUser([FromBody] CurrentUserCommand command)
         {
-            return await Mediator.Send(new CurrentUserQuery());
-        }
-
-        [HttpPost("refreshToken")]
-        public async Task<ActionResult<UserDto>> RefreshToken()
-        {
-            return await Mediator.Send(new RefreshTokenCommand());
+            return await Mediator.Send(command);
         }
 
         [HttpPost("logout")]
-        public async Task<ActionResult<Unit>> Logout()
+        public async Task<ActionResult<Unit>> Logout([FromBody] LogoutUserCommand command)
         {
-            return await Mediator.Send(new LogoutUserCommand());
+            return await Mediator.Send(command);
         }
     }
 }

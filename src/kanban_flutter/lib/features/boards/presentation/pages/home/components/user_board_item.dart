@@ -54,7 +54,7 @@ class _UserBoardItemState extends State<UserBoardItem> {
 
   void _deleteBoard() {
     _toggleConfirmDialog();
-    boardsBloc.add(DeleteBoardEvent(boardId: widget.board.id));
+    boardsBloc.add(DeleteBoardEvent(board: widget.board));
   }
 
   Widget _buildPopupMenu() {
@@ -151,7 +151,6 @@ class _UserBoardItemState extends State<UserBoardItem> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      // margin: EdgeInsets.only(bottom: getSize(5)),
       child: Column(
         children: [
           _buildListTile(),

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import '../../../../../../style/index.dart';
 import '../../../../domain/entities/index.dart';
 
-// TODO Add functionality, rebuild card ui
 class ColumnCardItem extends StatelessWidget {
   final CardItem card;
 
@@ -14,23 +13,23 @@ class ColumnCardItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(
-        bottom: getSize(2),
-        left: getSize(8),
-        right: getSize(8),
-      ),
+      margin: EdgeInsets.symmetric(horizontal: getSize(8)),
       child: Card(
         color: ThemeColor.card_bg,
         child: Padding(
-          padding: const EdgeInsets.all(20),
+          padding: EdgeInsets.symmetric(
+            vertical: getSize(10),
+            horizontal: getSize(12),
+          ),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
                 card.title,
                 style: TextStyle(
                   height: 1.5,
-                  fontSize: getSize(ThemeSize.fs_15),
-                  fontWeight: FontWeight.bold,
+                  fontSize: getSize(ThemeSize.fs_17),
+                  fontWeight: FontWeight.w600,
                 ),
               )
             ],

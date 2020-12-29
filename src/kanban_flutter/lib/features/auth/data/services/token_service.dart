@@ -4,13 +4,9 @@ import 'dart:convert';
 import '../../../../di/injection_container.dart';
 import '../../presentation/blocs/user_bloc/user_bloc.dart';
 
-abstract class TokenService {
-  void startRefreshTokenTimer(String token);
-  void stopRefreshTokenTimer();
-}
-
-class TokenServiceImpl implements TokenService {
-  static Timer timer;
+class TokenService {
+  static UserBloc _userBloc = sl<UserBloc>();
+  static Timer _timer;
 
   static Map<String, dynamic> decode(String token) {
     try {
@@ -38,18 +34,16 @@ class TokenServiceImpl implements TokenService {
     }
   }
 
-  void startRefreshTokenTimer(String token) {
-    final userBloc = sl<UserBloc>();
-
+  static void startRefreshTokenTimer(String token) {
     final expires = getExpirationDate(token).millisecondsSinceEpoch;
     final timeout =
         expires - DateTime.now().millisecondsSinceEpoch - (60 * 1000);
 
-    timer = Timer(
+    _timer = Timer(
       Duration(milliseconds: timeout),
-      () => userBloc.add(RefreshTokenEvent()),
+      () => _userBloc.add(CurrentUserEvent()),
     );
   }
 
-  void stopRefreshTokenTimer() => timer.cancel();
+  static void stopRefreshTokenTimer() => _timer.cancel();
 }

@@ -1,4 +1,4 @@
-package com.example.kanban_flutter
+package com.sivonte.kanban_boards
 
 import io.flutter.embedding.android.FlutterActivity
 

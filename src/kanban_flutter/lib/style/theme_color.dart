@@ -5,16 +5,15 @@ class ThemeColor {
 
   static const Color accent = Color.fromRGBO(23, 146, 135, 1);
 
+  // Board templates background colors
   static const Color blue = Color.fromRGBO(4, 129, 158, .6);
   static const Color light_blue = Color.fromRGBO(21, 160, 191, 1);
   static const Color dark_blue = Color.fromRGBO(6, 105, 247, .5);
   static const Color dark_blue2 = Color.fromRGBO(6, 105, 247, 1);
-
   static const Color purple = Color.fromRGBO(197, 23, 182, .5);
   static const Color purple2 = Color.fromRGBO(197, 23, 182, 1);
   static const Color dark_purple = Color.fromRGBO(217, 1, 113, .5);
   static const Color dark_purple2 = Color.fromRGBO(217, 1, 113, 1);
-
   static const Color green = Color.fromRGBO(46, 206, 157, .5);
   static const Color light_green = Color.fromRGBO(46, 206, 157, 1);
 
@@ -35,6 +34,7 @@ class ThemeColor {
   static const Color success_bg = Color.fromRGBO(92, 184, 92, .2);
   static const Color success_press = Color.fromRGBO(73, 237, 69, .6);
   static const Color danger_press = Color.fromRGBO(239, 68, 68, .6);
+  static const Color snackBar_success_bg = Color.fromRGBO(31, 113, 122, 1);
 
   // Font colors
   static const Color text_normal = Color.fromRGBO(227, 251, 255, .75);

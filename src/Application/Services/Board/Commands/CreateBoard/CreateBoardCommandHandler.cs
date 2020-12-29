@@ -67,7 +67,6 @@ namespace Application.Services.Board.Commands.CreateBoard
                     UserId = user.Id,
                     Title = request.Title,
                     BoardTemplateId = 1,
-                    Columns = new List<ColumnEntity>()
                 };
             }
 

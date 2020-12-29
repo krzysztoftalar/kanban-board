@@ -1,5 +1,6 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -77,6 +78,7 @@ class _HomePageState extends State<HomePage> {
 
   Widget _buildAppBar() {
     return AppBar(
+      brightness: Brightness.dark,
       automaticallyImplyLeading: false,
       backgroundColor: ThemeColor.board_header_bg,
       title: Text('Git Boards'),

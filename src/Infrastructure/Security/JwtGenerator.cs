@@ -22,19 +22,19 @@ namespace Infrastructure.Security
                 (configuration.GetValue<string>("JwtConfiguration:SecurityKey")));
         }
 
-        public string CreateToken(AppUser user)
+        public string GenerateAccessToken(AppUser user)
         {
             var claims = new List<Claim>
             {
                 new Claim(JwtRegisteredClaimNames.NameId, user.UserName)
             };
 
-            var creds = new SigningCredentials(_key, SecurityAlgorithms.HmacSha512Signature);
+            var creds = new SigningCredentials(_key, SecurityAlgorithms.HmacSha512);
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(claims),
-                Expires = DateTime.Now.AddMinutes(2),
+                Expires = DateTime.Now.AddMinutes(15),
                 SigningCredentials = creds
             };
 
@@ -44,7 +44,7 @@ namespace Infrastructure.Security
 
             return tokenHandler.WriteToken(token);
         }
-        
+
         public RefreshToken GenerateRefreshToken(AppUser user)
         {
             var randomNumber = new byte[32];
@@ -57,6 +57,30 @@ namespace Infrastructure.Security
                 Token = Convert.ToBase64String(randomNumber),
                 AppUserId = user.Id
             };
+        }
+
+        public ClaimsPrincipal GetPrincipalFromExpiredToken(string token)
+        {
+            var tokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = _key,
+                ValidateAudience = false,
+                ValidateIssuer = false,
+                ValidateLifetime = false,
+            };
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out var securityToken);
+            
+            var jwtSecurityToken = securityToken as JwtSecurityToken;
+            if (jwtSecurityToken == null || !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha512,
+                StringComparison.InvariantCultureIgnoreCase))
+            {
+                throw new SecurityTokenException("Invalid token");
+            }
+
+            return principal;
         }
     }
 }

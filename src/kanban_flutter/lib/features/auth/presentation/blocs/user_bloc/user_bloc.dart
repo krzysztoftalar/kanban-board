@@ -6,13 +6,12 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-import '../../../data/services/token_service.dart';
 import '../../../../../core/config/app_config.dart';
 import '../../../../../core/error/exceptions.dart';
 import '../../../../../core/routes/routes.dart';
-import '../../../../../core/usecases/usecase.dart';
 import '../../../../../main.dart';
 import '../../../data/params/index.dart';
+import '../../../data/services/token_service.dart';
 import '../../../domain/entities/user.dart';
 import '../../../domain/usecases/index.dart';
 
@@ -28,8 +27,6 @@ class UserBloc extends Bloc<UserEvent, UserState> {
   final RegisterUser register;
   final CurrentUser currentUser;
   final LogoutUser logout;
-  final RefreshToken refreshToken;
-  final TokenService tokenService;
 
   UserBloc({
     @required this.storage,
@@ -37,62 +34,53 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     @required this.register,
     @required this.currentUser,
     @required this.logout,
-    @required this.refreshToken,
-    @required this.tokenService,
   }) : super(UserInitial());
 
   @override
-  Stream<UserState> mapEventToState(UserEvent event,) async* {
+  Stream<UserState> mapEventToState(
+    UserEvent event,
+  ) async* {
     if (event is LoginEvent) {
       yield* _mapAuthenticatedUserToState(
-            () =>
-            login(
-              LoginParams(
-                email: event.email,
-                password: event.password,
-              ),
-            ),
+        () => login(
+          LoginParams(
+            email: event.email,
+            password: event.password,
+          ),
+        ),
         event,
       );
     } else if (event is RegisterEvent) {
       yield* _mapAuthenticatedUserToState(
-            () =>
-            register(
-              RegisterParams(
-                userName: event.userName,
-                email: event.email,
-                password: event.password,
-              ),
-            ),
+        () => register(
+          RegisterParams(
+            userName: event.userName,
+            email: event.email,
+            password: event.password,
+          ),
+        ),
         event,
       );
     } else if (event is CurrentUserEvent) {
       yield* _mapCurrentUserToState();
     } else if (event is LogoutEvent) {
       yield* _mapLogoutUserToState();
-    } else if (event is RefreshTokenEvent) {
-      yield* _mapAuthenticatedUserToState(
-            () => refreshToken(NoParams()),
-        event,
-      );
     }
   }
 
-  Stream<UserState> _mapAuthenticatedUserToState(_UserRequest _userRequest,
-      UserEvent event) async* {
+  Stream<UserState> _mapAuthenticatedUserToState(
+      _UserRequest _userRequest, UserEvent event) async* {
     yield UserLoading();
 
     final userEither = await _userRequest();
 
     yield userEither.fold(
-          (failure) => UserError(message: failure.message),
-          (user) {
-        storage.write(key: JWT_KEY, value: user.token);
+      (failure) => UserError(message: failure.message),
+      (user) {
+        storage.write(key: JWT_TOKEN, value: user.token);
+        storage.write(key: JWT_REFRESH_TOKEN, value: user.refreshToken);
 
-        if (event is RefreshTokenEvent) {
-          tokenService.stopRefreshTokenTimer();
-        }
-        tokenService.startRefreshTokenTimer(user.token);
+        TokenService.startRefreshTokenTimer(user.token);
 
         return UserAuthenticated(user: user);
       },
@@ -102,17 +90,22 @@ class UserBloc extends Bloc<UserEvent, UserState> {
   Stream<UserState> _mapCurrentUserToState() async* {
     yield UserLoading();
 
-    final token = await storage.read(key: JWT_KEY);
+    final token = await storage.read(key: JWT_TOKEN);
 
     if (token != null) {
-      final userEither = await currentUser(NoParams());
+      final userEither = await currentUser(
+        CurrentUserParams(
+          refreshToken: await storage.read(key: JWT_REFRESH_TOKEN),
+        ),
+      );
 
       yield userEither.fold(
-            (failure) => UserError(message: failure.message),
-            (user) {
-          storage.write(key: JWT_KEY, value: user.token);
+        (failure) => UserError(message: failure.message),
+        (user) {
+          storage.write(key: JWT_TOKEN, value: user.token);
+          storage.write(key: JWT_REFRESH_TOKEN, value: user.refreshToken);
 
-          tokenService.startRefreshTokenTimer(user.token);
+          TokenService.startRefreshTokenTimer(user.token);
 
           return UserAuthenticated(user: user);
         },
@@ -125,12 +118,19 @@ class UserBloc extends Bloc<UserEvent, UserState> {
   Stream<UserState> _mapLogoutUserToState() async* {
     yield UserLoading();
 
-    final userEither = await logout(NoParams());
+    final userEither = await logout(
+      LogoutParams(
+        refreshToken: await storage.read(key: JWT_REFRESH_TOKEN),
+      ),
+    );
 
     yield userEither.fold(
-          (failure) => UserError(message: failure.message),
-          (user) {
-        storage.delete(key: JWT_KEY);
+      (failure) => UserError(message: failure.message),
+      (user) {
+        storage.delete(key: JWT_TOKEN);
+        storage.delete(key: JWT_REFRESH_TOKEN);
+
+        TokenService.stopRefreshTokenTimer();
 
         KanbanApp.navigatorKey.currentState.pop();
         KanbanApp.navigatorKey.currentState

@@ -1,10 +1,8 @@
 import 'dart:io';
 
-import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dartz/dartz.dart';
 import 'package:dio/adapter.dart';
 import 'package:dio/dio.dart';
-import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
@@ -32,15 +30,10 @@ class ApiClient {
       };
     }
 
-    var cookieJar = CookieJar();
-    dio.interceptors.add(CookieManager(cookieJar));
-    print(cookieJar
-        .loadForRequest(Uri.parse("https://localhost:5001/api/")));
-
     dio.interceptors.add(
       InterceptorsWrapper(
         onRequest: (RequestOptions options) async {
-          final token = await storage.read(key: JWT_KEY);
+          final token = await storage.read(key: JWT_TOKEN);
           if (token != null) {
             options.headers.addAll({"Authorization": "Bearer $token"});
           }
@@ -48,8 +41,9 @@ class ApiClient {
         },
         onError: (DioError error) async {
           if (error.response.statusCode == 401 &&
-              error.response.headers.map.containsKey('www-authenticate')) {
-            await storage.delete(key: JWT_KEY);
+              error.response.headers.map.containsKey('token-expired')) {
+            await storage.delete(key: JWT_TOKEN);
+            await storage.delete(key: JWT_REFRESH_TOKEN);
             KanbanApp.navigatorKey.currentState
                 .pushReplacementNamed(Routes.AUTH_PAGE);
           }

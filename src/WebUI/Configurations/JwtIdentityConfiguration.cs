@@ -38,7 +38,7 @@ namespace WebUI.Configurations
                             }
 
                             return Task.CompletedTask;
-                        }
+                        },
                     };
                 });
 

@@ -1,54 +1,56 @@
 ﻿using System;
 using System.Linq;
 using System.Net;
+using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
 using Application.Dtos;
 using Application.Errors;
 using Application.Helpers;
 using Application.Interfaces;
-using Domain.Entities;
 using MediatR;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Net.Http.Headers;
 using AppContext = Application.Infrastructure.AppContext;
 
-namespace Application.Services.User.Commands.RefreshToken
+namespace Application.Services.User.Commands.CurrentUser
 {
-    public class RefreshTokenCommandHandler : IRequestHandler<RefreshTokenCommand, UserDto>
+    public class CurrentUserCommandHandler : IRequestHandler<CurrentUserCommand, UserDto>
     {
-        private readonly IUserAccessor _userAccessor;
         private readonly IJwtGenerator _jwtGenerator;
-        private readonly ICookieService _cookieService;
         private readonly IAppDbContext _context;
 
-        public RefreshTokenCommandHandler(IUserAccessor userAccessor, IJwtGenerator jwtGenerator,
-            ICookieService cookieService, IAppDbContext context)
+        public CurrentUserCommandHandler(IJwtGenerator jwtGenerator, IAppDbContext context)
         {
-            _userAccessor = userAccessor;
             _jwtGenerator = jwtGenerator;
-            _cookieService = cookieService;
             _context = context;
         }
 
-        public async Task<UserDto> Handle(RefreshTokenCommand request, CancellationToken cancellationToken)
+        public async Task<UserDto> Handle(CurrentUserCommand request, CancellationToken cancellationToken)
         {
+            var token = AppContext.Current.Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
+
+            var principal = _jwtGenerator.GetPrincipalFromExpiredToken(token);
+
+            var username = principal.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
+
             var user = await _context.Users
+                .Where(x => x.UserName == username)
                 .Include(x => x.RefreshTokens)
-                .FirstOrDefaultAsync(x => x.UserName == _userAccessor.GetCurrentUsername(), cancellationToken);
+                .SingleOrDefaultAsync(x => x.RefreshTokens.Any(y => y.Token == request.RefreshToken),
+                    cancellationToken);
 
             if (user == null)
             {
+                AppContext.Current.Response.Headers.Add(Constants.TokenExpired, "true");
                 throw new RestException(HttpStatusCode.Unauthorized);
             }
 
-            var token = AppContext.Current.Request.Cookies
-                .SingleOrDefault(x => x.Key == Constants.RefreshCookieToken);
-
-            var oldToken = user.RefreshTokens.SingleOrDefault(x => x.Token == token.Value);
+            var oldToken = user.RefreshTokens.SingleOrDefault(x => x.Token == request.RefreshToken);
 
             if (oldToken != null && !oldToken.IsActive)
             {
+                AppContext.Current.Response.Headers.Add(Constants.TokenExpired, "true");
                 throw new RestException(HttpStatusCode.Unauthorized);
             }
 
@@ -61,16 +63,19 @@ namespace Application.Services.User.Commands.RefreshToken
 
             await _context.RefreshTokens.AddAsync(newRefreshToken, cancellationToken);
 
+            var revokedTokens = user.RefreshTokens.Where(x => x.IsExpired);
+            
+            _context.RefreshTokens.RemoveRange(revokedTokens);
+
             var success = await _context.SaveChangesAsync(cancellationToken) > 0;
 
             if (success)
             {
-                _cookieService.SetCookieToken(newRefreshToken.Token);
-
                 return new UserDto
                 {
                     UserName = user.UserName,
-                    Token = _jwtGenerator.CreateToken(user),
+                    Token = _jwtGenerator.GenerateAccessToken(user),
+                    RefreshToken = newRefreshToken.Token
                 };
             }
 

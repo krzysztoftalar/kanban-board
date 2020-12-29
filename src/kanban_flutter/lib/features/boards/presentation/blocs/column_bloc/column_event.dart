@@ -35,14 +35,14 @@ class EditColumnEvent extends ColumnEvent {
 }
 
 class DeleteColumnEvent extends ColumnEvent {
-  final int columnId;
+  final ColumnItem column;
 
   DeleteColumnEvent({
-    @required this.columnId,
+    @required this.column,
   });
 
   @override
-  List<Object> get props => [columnId];
+  List<Object> get props => [column];
 }
 
 class CreateColumnEvent extends ColumnEvent {

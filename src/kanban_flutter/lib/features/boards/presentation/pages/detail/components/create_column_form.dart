@@ -138,10 +138,7 @@ class _CreateColumnFormState extends State<CreateColumnForm> {
   Widget build(BuildContext context) {
     return Expanded(
       child: Container(
-        padding: EdgeInsets.symmetric(
-          vertical: getSize(5),
-          horizontal: getSize(7),
-        ),
+        padding: EdgeInsets.symmetric(horizontal: getSize(5)),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

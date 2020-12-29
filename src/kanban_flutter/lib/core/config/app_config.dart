@@ -8,7 +8,8 @@ const String DEVELOPMENT_SERVER_URL = "https://localhost:5001/api";
 const String PRODUCTION_SERVER_URL = "https://kanbanboardsapi.azurewebsites.net/api";
 const String BASE_SERVER_URL = "baseServerUrl";
 const Environment ENVIRONMENT = Environment.Development;
-const String JWT_KEY = 'jwt';
+const String JWT_TOKEN = 'token';
+const String JWT_REFRESH_TOKEN = 'refreshToken';
 
 Map<dynamic, dynamic> config;
 

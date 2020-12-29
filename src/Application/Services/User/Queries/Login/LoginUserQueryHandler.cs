@@ -15,18 +15,16 @@ namespace Application.Services.User.Queries.Login
     public class LoginUserQueryHandler : IRequestHandler<LoginUserQuery, UserDto>
     {
         private readonly IJwtGenerator _jwtGenerator;
-        private readonly ICookieService _cookieService;
         private readonly IAppDbContext _context;
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
 
         public LoginUserQueryHandler(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager,
-            IJwtGenerator jwtGenerator, ICookieService cookieService, IAppDbContext context)
+            IJwtGenerator jwtGenerator, IAppDbContext context)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _jwtGenerator = jwtGenerator;
-            _cookieService = cookieService;
             _context = context;
         }
 
@@ -58,12 +56,11 @@ namespace Application.Services.User.Queries.Login
 
                 if (success)
                 {
-                    _cookieService.SetCookieToken(refreshToken.Token);
-
                     return new UserDto
                     {
                         UserName = user.UserName,
-                        Token = _jwtGenerator.CreateToken(user)
+                        Token = _jwtGenerator.GenerateAccessToken(user),
+                        RefreshToken = refreshToken.Token
                     };
                 }
 

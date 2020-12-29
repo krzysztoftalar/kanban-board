@@ -36,12 +36,12 @@ class EditBoardEvent extends BoardsEvent {
 }
 
 class DeleteBoardEvent extends BoardsEvent {
-  final int boardId;
+  final Board board;
 
   DeleteBoardEvent({
-    @required this.boardId,
+    @required this.board,
   });
 
   @override
-  List<Object> get props => [boardId];
+  List<Object> get props => [board];
 }

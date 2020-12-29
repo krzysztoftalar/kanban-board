@@ -51,8 +51,6 @@ class _ColumnFooterState extends State<ColumnFooter> {
     if (_formKey.currentState.validate()) {
       _formKey.currentState.save();
 
-      _toggleShowForm();
-
       cardBloc.add(
         CreateCardEvent(
           columnId: widget.column.id,
@@ -60,6 +58,9 @@ class _ColumnFooterState extends State<ColumnFooter> {
           title: _cardController.text,
         ),
       );
+
+      _toggleShowForm();
+      _cardController.clear();
     }
   }
 
@@ -136,7 +137,7 @@ class _ColumnFooterState extends State<ColumnFooter> {
   Widget build(BuildContext context) {
     return Container(
       alignment: Alignment.topLeft,
-      padding: EdgeInsets.symmetric(horizontal: getSize(7)),
+      padding: EdgeInsets.symmetric(horizontal: getSize(5)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
