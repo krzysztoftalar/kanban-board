@@ -14,7 +14,7 @@ import 'style/theme.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  setEnvironment(Environment.Development);
+  setEnvironment(Environment.Production);
 
   await di.init();
   Bloc.observer = SimpleBlocObserver();

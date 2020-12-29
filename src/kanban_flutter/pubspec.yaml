@@ -26,14 +26,6 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_launcher_icons: ^0.8.1
-
-flutter_icons:
-  android: true
-  ios: true
-  image_path: "assets/images/git_boards_logo.png"
-  adaptive_icon_background: "#191919"
-  adaptive_icon_foreground: "assets/images/git_boards_logo.png"
 
 flutter:
   uses-material-design: true

@@ -1,8 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.sivonte.kanban_boards">
+          package="com.sivonte.git_boards">
     <uses-permission android:name="android.permission.INTERNET"/>
     <application
-            android:label="Kanban Boards"
+            android:label="Git Boards"
             android:icon="@mipmap/ic_launcher">
         <activity
                 android:name=".MainActivity"
