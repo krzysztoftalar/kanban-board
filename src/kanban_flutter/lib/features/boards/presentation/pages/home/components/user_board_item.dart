@@ -21,8 +21,9 @@ class UserBoardItem extends StatefulWidget {
   final Board board;
 
   UserBoardItem({
+    @required Key key,
     @required this.board,
-  });
+  }) : super(key: key);
 
   @override
   _UserBoardItemState createState() => _UserBoardItemState();

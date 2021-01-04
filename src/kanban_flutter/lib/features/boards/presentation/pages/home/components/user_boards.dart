@@ -49,7 +49,10 @@ class _UserBoardsState extends State<UserBoards> {
         itemBuilder: (_, index) {
           return index >= state.boards.length
               ? BasicProgressIndicator()
-              : UserBoardItem(board: state.boards[index]);
+              : UserBoardItem(
+                  key: ValueKey(state.boards[index].id),
+                  board: state.boards[index],
+                );
         },
       ),
     );
