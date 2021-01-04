@@ -17,7 +17,8 @@
 mono_crash.*
 
 # Rider
-.idea
+.idea/
+.vscode/
 
 # Build results
 [Dd]ebug/

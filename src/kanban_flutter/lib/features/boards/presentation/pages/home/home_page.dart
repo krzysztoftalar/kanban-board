@@ -7,6 +7,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../../../../common/widgets/index.dart';
 import '../../../../../di/injection_container.dart';
 import '../../../../../style/index.dart';
+import '../../../../auth/data/services/token_service.dart';
 import '../../../../auth/presentation/blocs/user_bloc/user_bloc.dart';
 import '../../blocs/index.dart';
 import 'components/index.dart';
@@ -21,7 +22,7 @@ class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   BoardBloc _boardBloc;
   BoardsBloc _boardsBloc;
   UserBloc _userBloc;
@@ -30,17 +31,37 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+
     _boardBloc = sl<BoardBloc>();
     _boardsBloc = sl<BoardsBloc>();
     _userBloc = sl<UserBloc>();
+
+    WidgetsBinding.instance.addObserver(this);
   }
 
   @override
   void dispose() {
     super.dispose();
+
     _boardBloc.close();
     _boardsBloc.close();
     _userBloc.close();
+
+    WidgetsBinding.instance.removeObserver(this);
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    switch (state) {
+      case AppLifecycleState.paused:
+        TokenService.stopRefreshTokenTimer();
+        break;
+      case AppLifecycleState.resumed:
+        _userBloc.add(CurrentUserEvent());
+        break;
+      default:
+        break;
+    }
   }
 
   void _onBottomNavigationTap(int index) {
