@@ -4,11 +4,11 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:kanban_flutter/common/widgets/index.dart';
-import 'package:kanban_flutter/style/index.dart';
 
+import '../../../../../common/widgets/index.dart';
 import '../../../../../core/routes/routes.dart';
 import '../../../../../main.dart';
+import '../../../../../style/index.dart';
 import '../../../data/params/index.dart';
 import '../../../domain/entities/index.dart';
 import '../../../domain/usecases/index.dart';
